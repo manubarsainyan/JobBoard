@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Job Board</title>
+        <meta name="description" content="company is a free job board template">
+        <meta name="author" content="Ohidul">
+        <meta name="keyword" content="html, css, bootstrap, job-board">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/fontello.css">
+        <link rel="stylesheet" href="css/animate.css">        
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.css">
+        <link rel="stylesheet" href="css/owl.theme.css">
+        <link rel="stylesheet" href="css/owl.transitions.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/script.js"></script>
+         <script>
+        function companyLogin() {  
+ 			localStorage.setItem("userId", "");
+             window.location.href="userLogin.html";
+ 		}
+        function editProfile() {  
+             window.location.href="company_editProfile.html";
+ 		}
+        function loginRedirect() {  
+        			localStorage.setItem("companyId", "");
+                    window.location.href="companyLogin.html";
+        }
+        function load() {  
+        	 if(localStorage.getItem("companyId") == "" || localStorage.getItem("companyId") == null )
+            window.location.href="companyLogin.html";
+        	else{
+        		
+        	} 
+		}
+        
+        function getUserData() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+				
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+               
+                  document.getElementById("welcome").innerHTML = result.company_name;
+                  document.getElementById("Companylogo").innerHTML = '<img src="'+result.logo_url+'" alt="">' ;
+                /*   document.getElementById("lastname").value = result.lastname;
+                  document.getElementById("email").value = result.email;
+                  document.getElementById("phone").value = result.phone;
+                  document.getElementById("education").value = result.education;
+                  document.getElementById("description").value = result.description;
+                  document.getElementById("skills").value = result.skills; */
+              }
+            };
+            xhttp.open("GET", "/getCompanyProfile/"+localStorage.getItem("companyId"), true);
+            xhttp.send();
+        }
+        
+        </script>
+    </head>
+    <body onload="load();getUserData();">
+        <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <!-- Body content -->
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <p class="navbar-brand"  id="Companylogo"></p>
+              <!-- <h3>Welcome <span id="welcome"></span> </h3> -->
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <div class="button navbar-right">
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
+              </div>
+              <ul class="main-nav nav navbar-nav navbar-right">
+                <li class="wow fadeInDown" data-wow-delay="0s"><a class="active" href="#">Home</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a onClick="editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="userLogin();" href="#">Job Seeker Login</a></li>
+                
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+       <br>
+       <br>
+       <br>
+       <div style="text-align:center"> 
+       <button name="viewjobs"><a href ="postedjobs.html">View Posted Jobs</a></button>
+       </div>
+       <br>
+       <br>
+       <div style="text-align:center"> 
+       <button name="postjobs"><a href = "postjob.html">Post new Job</a></button>
+
+                 </div>
+
+       
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/wow.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

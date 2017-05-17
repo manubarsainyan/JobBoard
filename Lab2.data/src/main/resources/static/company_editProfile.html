@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Job Board</title>
+        <meta name="description" content="company is a free job board template">
+        <meta name="author" content="Ohidul">
+        <meta name="keyword" content="html, css, bootstrap, job-board">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>-->
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!--        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">-->
+<!--        <link rel="icon" href="favicon.ico" type="image/x-icon">-->
+
+<!--        <link rel="stylesheet" href="css/normalize.css">-->
+<!--        <link rel="stylesheet" href="css/font-awesome.min.css">-->
+<!--        <link rel="stylesheet" href="css/fontello.css">-->
+<!--        <link rel="stylesheet" href="css/animate.css">        -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<!--        <link rel="stylesheet" href="css/owl.carousel.css">-->
+<!--        <link rel="stylesheet" href="css/owl.theme.css">-->
+<!--        <link rel="stylesheet" href="css/owl.transitions.css">-->
+
+        <link rel="stylesheet" href="css/profile.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/script.js"></script>
+        <script>
+function loadDoc() {
+	console.log("test");
+	  var xhttp = new XMLHttpRequest();
+	  var firstname = document.getElementById("firstname").value;
+	  var lastname = document.getElementById("lastname").value;
+	  var email = document.getElementById("email").value; 
+	  var phone = document.getElementById("phone").value;
+	  var education = document.getElementById("education").value;
+	  var description = document.getElementById("description").value; 
+	  var skills = document.getElementById("skills").value; 
+	  console.log("education" + education);
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      alert("Success");
+	    }
+	  };
+	  xhttp.open("POST", "/createUserProfile?firstname="+firstname+"&lastname="+lastname+"&email="+email+"&description="+description+"&skills="+skills+"&education="+education+"&phone="+phone, true);
+	  xhttp.send();
+}
+
+function getUserData() {
+    var result;
+    var xhttp = new XMLHttpRequest();
+    var firstname = document.getElementById("firstname").value;
+    var lastname = document.getElementById("lastname").value;
+    var email = document.getElementById("email").value; 
+    var phone = document.getElementById("phone").value;
+    var education = document.getElementById("education").value;
+    var description = document.getElementById("description").value; 
+    var skills = document.getElementById("skills").value; 
+
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+    	  
+          result = JSON.parse(xhttp.response);
+          
+          document.getElementById("firstname").value = result.firstname;
+          document.getElementById("lastname").value = result.lastname;
+          document.getElementById("email").value = result.email;
+          document.getElementById("phone").value = result.phone;
+          document.getElementById("education").value = result.education;
+          document.getElementById("description").value = result.description;
+          document.getElementById("skills").value = result.skills;
+      }
+    };
+    xhttp.open("GET", "/getUserProfile/"+localStorage.getItem("userId"), true);
+    xhttp.send();
+}
+        </script>
+    </head>
+    <body onload="getUserData()">
+
+        <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <!-- Body content -->
+
+
+<div class="container">
+	<div class="row">
+
+
+    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12">
+        
+        <!--=========================input type file change on button ends here====================-->
+
+
+        <div class="full-width">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form id="myform" onsubmit="loadDoc()">
+                <div class="custom-form">
+                <div class="text-center bg-form">
+                    <div class="img-section">
+                        <img src="img/employee6.png" height="200" width="200" class="imgCircle" alt="Profile picture">
+                        <span class="fake-icon-edit" id="PicUpload" style="color: #ffffff;"><span class="glyphicon glyphicon-camera camera"></span></span>
+                    <div class="col-lg-12">
+                        <h4 class="text-right col-lg-12" style="color:black"><span class="glyphicon glyphicon-edit" style="color:black"></span> Edit Profile</h4>
+                        <input type="checkbox" class="form-control" id="checker">
+                    </div>
+                    </div>
+                    
+                    <input type="file" id="image-input" onchange="readURL(this);" accept="image/*" disabled class="form-control form-input Profile-input-file" >
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <input type="text" class="form-control form-input"  required placeholder="First Name" disabled id="firstname">
+                    <span class="glyphicon glyphicon-user input-place"></span>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <input type="text" class="form-control form-input"  required placeholder="Last Name" disabled id="lastname">
+                    <span class="glyphicon input-place"></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  required placeholder="Email ID" disabled id="email">
+                    <span class="glyphicon glyphicon-envelope input-place"></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input" placeholder="Phone Number" disabled id="phone">
+                    <span class="glyphicon glyphicon-earphone input-place"></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  placeholder="Education" disabled id="education">
+                    <span class="glyphicon glyphicon-eduaction input-place"></span>
+                </div>
+                 <div class="col-lg-12 col-md-12">
+                     <textarea class="form-control form-input"  placeholder="Description" disabled id="description">test</textarea>
+                    <span class="glyphicon input-place"></span>
+                </div>
+                 <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input" placeholder="Skills" disabled id="skills">
+                    <span class="glyphicon input-place"></span>
+                </div>
+                <div class="col-lg-12 col-md-12 text-center">
+                    <input type="submit" class="btn btn-info btn-lg custom-btn" value="Save" id="submit" ><span class="glyphicon glyphicon-save"></span>
+                </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+        
+        
+        <div class="footer-area">
+            <div class="container">
+                <div class="row footer">
+                </div>
+                <div class="row footer-copy">
+                </div>
+            </div>
+        </div>
+		
+		
+		
+		
+		
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/wow.js"></script>
+        <script src="js/main.js"></script>
+        
+<script>
+
+    $('input[id=base-input]').change(function() {
+        $('#fake-input').val($(this).val().replace("C:\\fakepath\\", ""));
+    });
+
+    <!--==================Javascript code for custom input type file on button ================-->
+
+    $('input[id=main-input]').change(function() {
+        console.log($(this).val());
+        var mainValue = $(this).val();
+        if(mainValue == ""){
+            document.getElementById("fake-btn").innerHTML = "Choose File";
+        }else{
+            document.getElementById("fake-btn").innerHTML = mainValue.replace("C:\\fakepath\\", "");
+        }
+    });
+
+    <!--=========================input type file change on button ends here====================-->
+
+//    ===================== snippet for profile picture change ============================ //
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('.imgCircle')
+                        .attr('src', e.target.result)
+                        .width(200)
+                        .height(200);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+//    =================================== ends here ============================================ //
+
+    var checkme = document.getElementById('checker');
+    var userImage = document.getElementById('image-input');
+    var userFirstName = document.getElementById('firstname');
+    var userLastName = document.getElementById('lastname');
+    var userPhone = document.getElementById('phone');
+    var userEmail = document.getElementById('email');
+    var userEducation = document.getElementById('education');
+    var userDescription = document.getElementById('description');
+    var userSkills = document.getElementById('skills');
+    var UserSend = document.getElementById('submit');
+    var editPic = document.getElementById('PicUpload');
+    checkme.onchange = function() {
+        UserSend.disabled = !this.checked;
+        userImage.disabled = !this.checked;
+        userFirstName.disabled = !this.checked;
+        userLastName.disabled = !this.checked;
+        userPhone.disabled = !this.checked;
+        //userEmail.disabled = !this.checked;
+        userEducation.disabled = !this.checked;
+        userDescription.disabled = !this.checked;
+        userSkills.disabled = !this.checked;
+        editPic.style.display = this.checked ? 'block' : 'none';
+    };
+    </script>
+    
+    </body>
+</html>
