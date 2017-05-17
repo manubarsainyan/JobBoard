@@ -1,4 +1,4 @@
-package edu.sjsu.cmpe275.user;
+apackage edu.sjsu.cmpe275.user;
 
 import java.sql.Blob;
 import java.text.SimpleDateFormat;
@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sjsu.cmpe275.application.Application;
 //import edu.sjsu.cmpe275.lab2.CommonUtilities;
 //import scala.annotation.meta.param;
+//import edu.sjsu.cmpe275.utilities.SendMailsService;
 
 
 
@@ -42,15 +43,10 @@ import edu.sjsu.cmpe275.application.Application;
 public class JobSeekerService {
 	@Autowired
 	public UserProfileController userProfileController;
+	@Autowired
+	public userProfileDao userProfileDao;
 //	@Autowired
-//	public SimpleEmailController simpleEmailController;
-//	CommonUtilities commonUtilities= new CommonUtilities();
-//	@RequestMapping("/aaa")
-//    String home() {
-//        return "Hellokjhj;n World!";
-//    }
-//	
-
+//	public SendMailsService sendMailsService;
 	@Transactional
 	@RequestMapping(method=RequestMethod.GET,value="/getUserProfile/{id}")
 	public ResponseEntity<?> getPassenger(@PathVariable(value = "id") String userId
@@ -74,7 +70,7 @@ public class JobSeekerService {
 	public ResponseEntity<?> createUserProfile(@RequestParam(value = "firstname", required = false) String firstname,
 			@RequestParam(value = "lastname", required = false) String lastname,
 			@RequestParam(value = "email", required = false) String email,
-			@RequestParam(value = "profilePicture", required = false) String profilePicture,
+			@RequestParam(value = "picture", required = false) String profilePicture,
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "skills", required = false) String skills,
 			@RequestParam(value = "education", required = false) String education,
@@ -85,11 +81,15 @@ public class JobSeekerService {
 			) throws Exception{
 
 		try{
-			UserProfile userProfile=userProfileController.createUserProfile(firstname, lastname, email, profilePicture, description,skills,education,phone,password,isAccountValidated, isProfileUpdated);
+			UserProfile userProfile=userProfileDao.findByEmail(email);
+			if(userProfile!=null){
+				return new ResponseEntity<>("", HttpStatus.valueOf(401));
+			}else{
+			userProfile=userProfileController.createUserProfile(firstname, lastname, email, profilePicture, description,skills,education,phone,password,isAccountValidated, isProfileUpdated);
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString(userProfile);
 			return new ResponseEntity<>(jsonInString, HttpStatus.OK);
-			
+			}
 
 		}catch(RollbackException e){
 			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -116,9 +116,20 @@ public class JobSeekerService {
 			) throws Exception{
 
 		try{
-			UserProfile userProfile=userProfileController.getUserProfile(Integer.parseInt(userId));
-			if(userProfile==null){
-				userProfile=userProfileController.updateUserProfile(Integer.parseInt(userId), firstname, lastname, email, profilePicture, description, skills, education, phone, password, isAccountValidated, isProfileUpdated);
+			UserProfile userProfile=null;
+			System.out.println("working ");;
+			if(email!=null){
+				userProfile=userProfileDao.findByEmail(email);
+				 if(userProfile!=null){
+					 userProfile=userProfileController.getUserProfile(Integer.parseInt(userId)); 
+				 }else{
+					 return new ResponseEntity<>("", HttpStatus.valueOf(600)); 
+				 }
+			}else{
+			userProfile=userProfileController.getUserProfile(Integer.parseInt(userId));
+			}
+			if(userProfile!=null){
+				userProfile=userProfileController.updateUserProfile(Integer.parseInt(userId), firstname, lastname, email, profilePicture, description, skills, education, phone, password, isAccountValidated, "true");
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(userProfile);
 				return new ResponseEntity<>(jsonInString, HttpStatus.OK);	
@@ -133,7 +144,84 @@ public class JobSeekerService {
 		}
 	}
 	
+	@RequestMapping(method=RequestMethod.POST,value="/login")
+	public ResponseEntity<?> login(@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "password", required = false) String password
+			) throws Exception{
+
+		try{
+			UserProfile userProfile=userProfileController.checkLogin(email);
+			if(userProfile==null){
+				return new ResponseEntity<>("", HttpStatus.valueOf(404));	
+			}else if(userProfile.getPassword()!=null && userProfile.getPassword().equals(password)){
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(userProfile);
+				if(userProfile.getIsAccountValidated()!=null && userProfile.getIsAccountValidated().equalsIgnoreCase("true")){
+					return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(200));
+				}else{
+					return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(406));
+				}
+				
+			}else{
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(userProfile);
+				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(401));
+			}			
+		}catch(RollbackException e){
+			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
+	@RequestMapping(method=RequestMethod.GET,value="/login")
+	public ResponseEntity<?> loginGet(@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "password", required = false) String password
+			) throws Exception{
+		return new ResponseEntity<>("", HttpStatus.OK);
+	
+	}
+	
+	@RequestMapping(method=RequestMethod.POST,value="/AccountActivation")
+	public ResponseEntity<?> accountValidation(@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "authCode", required = false) String authCode
+			) throws Exception{
+		try{
+			UserProfile userProfile=userProfileController.checkLogin(email);
+			if(userProfile==null){
+				return new ResponseEntity<>("", HttpStatus.valueOf(601));	
+			}else if(String.valueOf((userProfile.getUserId()+500)*4).equals(authCode)){
+				userProfile.setIsAccountValidated("true");
+				userProfileDao.updateUserProfile(userProfile);
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(userProfile);
+				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(200));
+				
+			}else{
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonInString = mapper.writeValueAsString(userProfile);
+				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(602));		
+			}			
+		}catch(RollbackException e){
+			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+//	@RequestMapping(method=RequestMethod.GET,value="/mail")
+//	public void sendMail(){
+//		try{
+//			sendMailsService.sendMail();
+//			
+//		
+//		}catch(Exception e){
+//			
+//		}	
+//	}
 	
 	
 	
