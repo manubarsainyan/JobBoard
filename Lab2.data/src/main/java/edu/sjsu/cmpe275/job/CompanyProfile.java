@@ -1,4 +1,4 @@
-package edu.sjsu.cmpe275.job;
+apackage edu.sjsu.cmpe275.job;
 
 import java.util.List;
 
@@ -7,6 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class CompanyProfile {
@@ -34,7 +38,9 @@ public class CompanyProfile {
 	@Column(name="phone")
 	private String phone;
 	
-	@OneToMany
+	@OneToMany(mappedBy="companyProfile")
+	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jobId")
+	@JsonBackReference
 	List<JobPosting> jobPostings;
 
 	public List<JobPosting> getJobPostings() {
