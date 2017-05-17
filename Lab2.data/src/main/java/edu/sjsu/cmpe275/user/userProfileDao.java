@@ -34,4 +34,9 @@ public class userProfileDao {
 	void deleteUserProfile(int userId){
 		userProfileRepository.delete(userId);
 	}
+	
+	public UserProfile findByEmail(String email){
+		return userProfileRepository.findByEmail(email);
+	}
+	
 }
