@@ -28,10 +28,10 @@ public class UserProfile {
 	    private String firstname;
 		@Column(name="last_name")
 	    private String lastname;
-		@Column(name="email_address")
+		@Column(name="email_address",unique=true)
 		private String email;
 		@Column(name="profile_picture")
-	    private Blob profilePicture;
+	    private String profilePicture;
 		@Column(name="description")
 	    private String description;
 		@Column(name="skills")
@@ -64,14 +64,6 @@ public class UserProfile {
 	    this.isAccountValidated=isAccountValidated;
 	    this.isProfileUpdated=isProfileUpdated;
 	   }
-//	   public  UserProfile(int passengerId,String firstname, String lastname,String age, String gender, String phone){
-//			this.id=passengerId;
-//		    this.firstname=firstname;
-//		    this.lastname=lastname;
-//		    this.age=age;
-//		    this.gender=gender;
-//		    this.phone=phone;
-//		   }
 	   
 	public int getUserId() {
 		return userId;
@@ -97,10 +89,11 @@ public class UserProfile {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Blob getProfilePicture() {
+	
+	public String getProfilePicture() {
 		return profilePicture;
 	}
-	public void setProfilePicture(Blob profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 	public String getDescription() {

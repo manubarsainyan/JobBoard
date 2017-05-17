@@ -1,4 +1,4 @@
-apackage edu.sjsu.cmpe275.user;
+package edu.sjsu.cmpe275.user;
 
 import java.sql.Blob;
 import java.text.SimpleDateFormat;
