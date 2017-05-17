@@ -20,6 +20,13 @@ public class UserProfileController {
 	public UserProfile getUserProfile(int userId){
 		return userProfileDao.findUserProfile(userId);
 	}
+	
+	public UserProfile checkLogin(String email){
+		UserProfile userProfile=userProfileDao.findByEmail(email);
+		return userProfile;	
+	}
+	
+
 
 	public UserProfile createUserProfile(String firstname, String lastname, String email, String profilePicture, String description,String skills,String education, String phone,String password,String isAccountValidated, String isProfileUpdated) throws Exception{
 		UserProfile user = new UserProfile(firstname, lastname, email, profilePicture, description,skills,education,phone,password,isAccountValidated, isProfileUpdated);
@@ -39,7 +46,7 @@ public class UserProfileController {
 		if(lastname!=null) userProfile.setLastname(lastname);
 		
 		if(email!=null) userProfile.setEmail(email);
-//		if(profilePicture!=null) userProfile.setProfilePicture(profilePicture);
+		if(profilePicture!=null) userProfile.setProfilePicture(profilePicture);
 		if(description!=null) userProfile.setDescription(description);
 		if(skills!=null) userProfile.setSkills(skills);
 		if(education!=null) userProfile.setEducation(education);
@@ -50,6 +57,9 @@ public class UserProfileController {
 		
 		return userProfileDao.updateUserProfile(userProfile);
 	}
+	
+	
+	
 	
 	
 	/**
