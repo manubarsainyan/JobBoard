@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Job Board</title>
+		<meta name="description" content="A Job Board">
+        <meta name="author" content="Anshul Agrawal">
+        <meta name="keyword" content="html, css, bootstrap, job-board">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/fontello.css">
+        <link rel="stylesheet" href="css/animate.css">        
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.css">
+        <link rel="stylesheet" href="css/owl.theme.css">
+        <link rel="stylesheet" href="css/owl.transitions.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+        
+        <link rel="stylesheet" href="css/profile.css">
+        <script src="js/script.js"></script>
+        <script>
+        
+        function userLogin() {  
+ 			localStorage.setItem("userId", "");
+             window.location.href="userLogin.html";
+ 		}
+     
+        function loginRedirect() {  
+        			localStorage.setItem("companyId", "");
+                    window.location.href="company_login.html";
+        }
+      /*   function load() {  
+         	if(localStorage.getItem("companyId") == "" || localStorage.getItem("companyId") == null )
+            window.location.href="company_login.html";
+        	else{
+        		
+        	}  */
+		
+        
+function loadDoc() {
+	alert("Success");
+	console.log("test");
+	  var xhttp = new XMLHttpRequest();
+	  var title = document.getElementById("position").value;
+	  var description = document.getElementById("description").value;
+	  var responsibility = document.getElementById("responsibility").value; 
+	  var location = document.getElementById("location").value;
+	  var salary = document.getElementById("salary").value;
+	
+	  
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      alert("Success");
+	      window.location.href="editPosition.html";
+	    }
+	  };
+	  alert("Success");
+	  xhttp.open("POST", "/updateCompanyPosition/"+localStorage.companyId+"?position_title="+title+"&position_description="+description+"&position_responsibility="+responsibility+"&office_location="+location+"&salary="+salary+"&company_id="+localStorage.companyId, true);   
+	<!--xhttp.open("POST", "/updateCompanyPosition/"+"1"+"?position_title="+title+"&position_description="+description+"&position_responsibility="+responsibility+"&office_location="+location+"&salary="+salary+"&company_id="+"1", true);  -->
+	xhttp.send();
+}
+
+function getPositionData() 
+{
+    var result;
+    var xhttp = new XMLHttpRequest();
+    var title = document.getElementById("position").value;
+    var description = document.getElementById("description").value;
+    var responsibility = document.getElementById("responsibility").value; 
+    var location = document.getElementById("location").value;
+    var salary = document.getElementById("salary").value;
+   
+    
+
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) 
+      {
+    	  
+          result = JSON.parse(xhttp.response);
+          
+          document.getElementById("position").value = result.position_title;
+          document.getElementById("description").value = result.position_description;
+          document.getElementById("responsibility").value = result.position_responsibility;
+          document.getElementById("location").value = result.office_location;
+          document.getElementById("salary").value = result.salary;
+          
+      }
+    };
+    
+    xhttp.open("GET", "/getCompanyPosition/"+localStorage.getItem("positionID"), true);   
+ <!--  xhttp.open("GET", "/getCompanyPosition/"+"1", true);   -->
+   
+    xhttp.send();
+}
+        </script>
+    </head>
+    <body onload="getPositionData()">
+
+            <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <!-- Body content -->
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <h3>Welcome <span id="welcome"></span> </h3>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <div class="button navbar-right">
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
+              </div>
+              <ul class="main-nav nav navbar-nav navbar-right">
+                <li class="wow fadeInDown" data-wow-delay="0s"><a  href="company_index.html">Home</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a class="active" onClick="company_editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="userLogin();" href="#">User Login</a></li>
+                
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+        <!-- Body content -->
+
+
+<div class="container">
+	<div class="row">
+
+
+    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12">
+        
+        <!--=========================input type file change on button ends here====================-->
+
+
+        <div class="full-width">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form id="myform" onsubmit="loadDoc()">
+                <div class="custom-form">
+                <div class="text-center bg-form">
+                    <div class="img-section">
+                        <img src="img/employee6.png" height="200" width="200" class="imgCircle" alt="Profile picture">
+                        <span class="fake-icon-edit" id="PicUpload" style="color: #ffffff;"><i class="fa fa-camera" style="font-size:40px;color:black;"></i><span class=""></span></span>
+                    <div class="col-lg-12">
+                        <h4 class="text-right col-lg-12" style="color:black"><i class="fa fa-edit" style="font-size:30px;color:black;"></i><span class="" style="color:black"></span> Edit Profile</h4>
+                        <input type="checkbox" class="form-control" id="checker">
+                    </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  required placeholder="Company Position Title" disabled id="position">
+                </div>
+                
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  required placeholder="Position Description" disabled id="description">
+                    
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  required placeholder="Position Responsibilities" disabled id="responsibility">
+                  
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input" placeholder="Office Location" disabled id="location">
+                   
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  placeholder="salary" disabled id="salary">
+                    
+              
+                <div class="col-lg-12 col-md-12 text-center">
+                    <input type="submit" class="btn btn-info btn-lg custom-btn" value="Save" id="submit" disabled>
+                </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+        
+        
+  
+		
+		
+		
+		
+		
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/wow.js"></script>
+        <script src="js/main.js"></script>
+        
+<script>
+
+    $('input[id=base-input]').change(function() {
+        $('#fake-input').val($(this).val().replace("C:\\fakepath\\", ""));
+    });
+
+    <!--==================Javascript code for custom input type file on button ================-->
+
+    $('input[id=main-input]').change(function() {
+        console.log($(this).val());
+        var mainValue = $(this).val();
+        if(mainValue == ""){
+            document.getElementById("fake-btn").innerHTML = "Choose File";
+        }else{
+            document.getElementById("fake-btn").innerHTML = mainValue.replace("C:\\fakepath\\", "");
+        }
+    });
+
+    <!--=========================input type file change on button ends here====================-->
+
+
+    var checkme = document.getElementById('checker');
+    var cposition = document.getElementById('position');
+    var cdescription = document.getElementById('description');
+    var cresponsibility = document.getElementById('responsibility');
+    var clocation = document.getElementById('location');
+    var csalary = document.getElementById('salary');
+    
+    var UserSend = document.getElementById('submit');
+   
+    checkme.onchange = function() {
+        UserSend.disabled = !this.checked;
+        cposition.disabled = !this.checked;
+        cdescription.disabled = !this.checked;
+        cresponsibility.disabled = !this.checked;
+        clocation.disabled = !this.checked;
+        //userEmail.disabled = !this.checked;
+        csalary.disabled = !this.checked;
+       
+        
+    };
+    </script>
+    
+    </body>
+</html>
