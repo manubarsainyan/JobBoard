@@ -1,0 +1,247 @@
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Patient Monitoring System">
+    <meta name="keywords" content="CMPE275, SJSU, Job Board, term Project">
+    <meta name="author" content="HackJS">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="author" href="https://www.linkedin.com/in/anshul-agrawal/">
+    <title>Home Page</title> 
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.css"/>
+    <script src="js/script.js"></script>
+    <style> 
+    body {
+        padding-top: 90px;
+    }
+    </style>
+    
+    <script>
+  /*       function login() { 
+        	  var result;
+              var xhttp = new XMLHttpRequest();
+              var email = document.getElementById("username").value;
+              var password = document.getElementById("password").value;
+              console.log(email);
+              console.log(password); */
+          /*     if(email==null || email==""){
+					swal("*** Enter Email ***");
+				}else if(password==null || password==""){
+					swal("*** Enter Password  ***");
+				}else{ */
+
+   /*            xhttp.onreadystatechange = function() {
+            	  alert("Response Came Back state is="+this.readyState+"Status is"+this.status);
+                if (this.readyState == 4) {
+                	if (this.status == 200) {
+                	result = JSON.parse(xhttp.response);
+                    localStorage.setItem("company_email", result.company_email);
+                    window.location.href = "company_index.html";
+                
+                	}else if(this.status == 401){
+                		swal("*** Invalid Password ***");
+                		document.getElementById("password").value="";
+                	}else if(this.status == 402){
+                		swal("*** Account Not Validated ***");
+                		document.getElementById("username").value="";
+                		document.getElementById("password").value="";
+                	}else if(this.status == 404){
+                		swal("*** User not found ***");
+                		document.getElementById("username").value="";
+                		document.getElementById("password").value="";
+                	}
+                }
+              };
+              alert("/cologin?company_email="+email+"&password="+password);
+              xhttp.open("POST", "/cologin?company_email="+email+"&password="+password, true);
+              xhttp.send();
+				} */
+        
+          
+			       function login() {  
+			        	  var result;
+			              var xhttp = new XMLHttpRequest();
+			              var email = document.getElementById("username").value;
+			              var password = document.getElementById("password").value;
+			              var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+							 if(email==null || email==""){
+								swal("*** Enter Email ID ***");
+							}else  if(!emailPattern.test(email)) {
+				            	  swal("*** Enter a Valid Email ID ***");	
+				            	  
+				              }else if(password==null || password==""){
+								swal("*** Enter Password  ***");
+							}else{
+			              xhttp.onreadystatechange = function() {
+								//alert("Response Came Back state is="+this.readyState+"Status is"+this. );
+								console.log("hjhkjhjkk");
+			                if (this.readyState == 4) {
+			                	if (this.status == 200) {
+			                		result = JSON.parse(xhttp.response);
+			                        console.log(result.userId);
+			                        localStorage.setItem("companyId", result.company_id);
+			                        window.location.href = "company_index.html";
+			                	}else if(this.status == 401){
+			                		swal("*** Invalid Password ***");
+			                		document.getElementById("password").value="";
+			                		console.log("hjhkjhjkk");
+			                	}else if(this.status == 404){
+			                		swal("*** User Not Registered ***");
+			                		document.getElementById("email").value="";
+			                		document.getElementById("password").value="";
+			                	}
+			                }
+			              };
+			              xhttp.open("POST", "/cologin?company_email="+email+"&password="+password, true);
+			              console.log("test");
+			              xhttp.send();
+			        }
+			        }
+			       
+			       
+			       
+			       
+			       
+          
+            
+        function register() {
+              var result;
+              var xhttp = new XMLHttpRequest();
+              var email = document.getElementById("email").value;
+              var password = document.getElementById("password_reg").value;
+              var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+             
+              var name = document.getElementById("name").value;
+              var website = document.getElementById("website").value;
+              var logo = document.getElementById("logo").value;
+              var address = document.getElementById("address").value;
+              var description = document.getElementById("description").value;
+              console.log(email);
+              console.log("pass="+password);
+              if(email==null || email==""){
+					swal("*** Enter Email ID ***");
+				} else  if(!emailPattern.test(email)) {
+	            	  swal("*** Enter a Valid Email ID ***");	
+	            	  
+	              }else if(password==null || password==""){
+					swal("*** Enter Password  ***");
+				}else{     
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    
+                	if (this.status == 200) {
+                		result = JSON.parse(xhttp.response);
+                        window.location.href = "company_index.html"; 
+                	}else if(this.status == 401){
+                		swal("*** Company Already Registered ***");
+                	}else if(this.status == 402){
+                		swal("*** Email ID Already Registered as User ***");
+                	}
+                }
+              };
+              xhttp.open("POST", "/createCompanyProfile?company_email="+email+"&password="+password+"&company_name="+name+"&company_website="+website+"&logo_url="+logo+"&address="+address+"&description="+description, true);
+              xhttp.send();
+        }
+              }
+        </script> 
+       
+    
+    
+    
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+        <center> <h2>Find great talents with us !!!</h2></center>
+        <br>
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a href="#" class="active" id="login-form-link">Login</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a href="#" id="register-form-link">Register</a>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="login-form" method="post" role="form" style="display: block;">
+                                <div class="form-group">
+                                    <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Company Email" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="button" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary" onclick="login()" value="Log In">
+                                        </div>
+                                    </div>
+                                </div>
+                             
+                            </form>
+                            <form id="register-form" role="form" style="display: none;">
+                            
+                            	 <div class="form-group">
+                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Company Email" value="">
+                                </div>
+                                
+                                 <div class="form-group">
+                                    <input type="password" name="password" id="password_reg" tabindex="1" class="form-control" placeholder="Password" value="">
+                                </div>
+                            
+                            
+                                <div class="form-group">
+                                    <input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Company Name" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="website" id="website" tabindex="1" class="form-control" placeholder="Company Website" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="logo" id="logo" tabindex="2" class="form-control" placeholder="Logo Image URL">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="address" id="address" tabindex="2" class="form-control" placeholder="Address of headquarters">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="text" name="description" id="description" tabindex="2" class="form-control" placeholder="Description">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-primary" onclick="register()" value="Register Now">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="text-center">
+              <a href="userLogin.html" tabindex="5" class="forgot-password">Click here for Job Seeker Login!</a>
+     </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+</body>
+</html>
