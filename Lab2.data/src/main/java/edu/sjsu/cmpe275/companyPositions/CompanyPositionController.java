@@ -25,8 +25,8 @@ public class CompanyPositionController
 		return companyPosition;	
 	}
 	
-	public CompanyPosition createCompanyPosition(int company_id,String position_title, String position_description, String position_responsibility, String office_location, String salary) throws Exception{
-		CompanyPosition position = new CompanyPosition(company_id,position_title, position_description, position_responsibility, office_location, salary);
+	public CompanyPosition createCompanyPosition(int company_id,String position_title, String position_description, String position_responsibility, String office_location, String salary, String status) throws Exception{
+		CompanyPosition position = new CompanyPosition(company_id,position_title, position_description, position_responsibility, office_location, salary, status);
 		try
 		{
 			CompanyPosition companyPosition=companyPositionDao.addCompanyPosition(position);
@@ -38,7 +38,7 @@ public class CompanyPositionController
 		}
 	}
 	
-	public CompanyPosition updateCompanyPosition(int company_id,int position_id, String position_title, String position_description, String position_responsibility, String office_location, String salary)
+	public CompanyPosition updateCompanyPosition(int position_id,int company_id, String position_title, String position_description, String position_responsibility, String office_location, String salary, String status)
 	{
 		CompanyPosition companyPosition = getCompanyPosition(position_id);
 		if(companyPosition==null) return companyPosition;
@@ -49,6 +49,7 @@ public class CompanyPositionController
 //		if(profilePicture!=null) userProfile.setProfilePicture(profilePicture);
 		if(office_location!=null) companyPosition.setOffice_location(office_location);
 		if(salary!=null) companyPosition.setSalary(salary);
+		if(salary!=null) companyPosition.setStatus(status);
 		
 		return companyPositionDao.updateCompanyPosition(companyPosition);
 	}
