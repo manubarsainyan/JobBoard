@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.sjsu.cmpe275.mail.MailService;
 
 import edu.sjsu.cmpe275.application.Application;
 //import edu.sjsu.cmpe275.lab2.CommonUtilities;
@@ -45,8 +46,8 @@ public class JobSeekerService {
 	public UserProfileController userProfileController;
 	@Autowired
 	public userProfileDao userProfileDao;
-//	@Autowired
-//	public SendMailsService sendMailsService;
+	@Autowired
+	public MailService mailService;
 	@Transactional
 	@RequestMapping(method=RequestMethod.GET,value="/getUserProfile/{id}")
 	public ResponseEntity<?> getPassenger(@PathVariable(value = "id") String userId
@@ -86,6 +87,7 @@ public class JobSeekerService {
 				return new ResponseEntity<>("", HttpStatus.valueOf(401));
 			}else{
 			userProfile=userProfileController.createUserProfile(firstname, lastname, email, profilePicture, description,skills,education,phone,password,isAccountValidated, isProfileUpdated);
+			mailService.sendRegistrationEmail(userProfile);
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString(userProfile);
 			return new ResponseEntity<>(jsonInString, HttpStatus.OK);
@@ -105,7 +107,7 @@ public class JobSeekerService {
 			@RequestParam(value = "firstname", required = false) String firstname,
 			@RequestParam(value = "lastname", required = false) String lastname,
 			@RequestParam(value = "email", required = false) String email,
-			@RequestParam(value = "profilePicture", required = false) String profilePicture,
+			@RequestParam(value = "profilePicture", required = false) byte[] profilePicture,
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "skills", required = false) String skills,
 			@RequestParam(value = "education", required = false) String education,
@@ -123,7 +125,7 @@ public class JobSeekerService {
 				 if(userProfile!=null){
 					 userProfile=userProfileController.getUserProfile(Integer.parseInt(userId)); 
 				 }else{
-					 return new ResponseEntity<>("", HttpStatus.valueOf(600)); 
+					 return new ResponseEntity<>("", HttpStatus.valueOf(401)); 
 				 }
 			}else{
 			userProfile=userProfileController.getUserProfile(Integer.parseInt(userId));
@@ -156,6 +158,12 @@ public class JobSeekerService {
 			}else if(userProfile.getPassword()!=null && userProfile.getPassword().equals(password)){
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(userProfile);
+				
+				if(userProfile.getIsAccountValidated()==null || !userProfile.getIsAccountValidated().trim().equalsIgnoreCase("true")){
+						return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(405));
+					}
+				
+				
 				if(userProfile.getIsAccountValidated()!=null && userProfile.getIsAccountValidated().equalsIgnoreCase("true")){
 					return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(200));
 				}else{
@@ -184,24 +192,26 @@ public class JobSeekerService {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST,value="/AccountActivation")
-	public ResponseEntity<?> accountValidation(@RequestParam(value = "email", required = false) String email,
+	public ResponseEntity<?> accountValidation(@RequestParam(value = "userId", required = false) String userId,
 			@RequestParam(value = "authCode", required = false) String authCode
 			) throws Exception{
 		try{
-			UserProfile userProfile=userProfileController.checkLogin(email);
+			if(userId==null || userId.equals("")){
+				return new ResponseEntity<>("", HttpStatus.valueOf(402));	
+			}
+			UserProfile userProfile=userProfileDao.findByUserId(Integer.parseInt(userId));
 			if(userProfile==null){
-				return new ResponseEntity<>("", HttpStatus.valueOf(601));	
-			}else if(String.valueOf((userProfile.getUserId()+500)*4).equals(authCode)){
+				return new ResponseEntity<>("", HttpStatus.valueOf(404));	
+			}else if(userId.equals(authCode)){
 				userProfile.setIsAccountValidated("true");
 				userProfileDao.updateUserProfile(userProfile);
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(userProfile);
-				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(200));
-				
+				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(200));	
 			}else{
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(userProfile);
-				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(602));		
+				return new ResponseEntity<>(jsonInString, HttpStatus.valueOf(402));		
 			}			
 		}catch(RollbackException e){
 			return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
