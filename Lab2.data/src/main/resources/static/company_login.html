@@ -35,7 +35,7 @@
 				}else{ */
 
    /*            xhttp.onreadystatechange = function() {
-            	  alert("Response Came Back state is="+this.readyState+"Status is"+this.status);
+            	  //alert("Response Came Back state is="+this.readyState+"Status is"+this.status);
                 if (this.readyState == 4) {
                 	if (this.status == 200) {
                 	result = JSON.parse(xhttp.response);
@@ -77,8 +77,7 @@
 								swal("*** Enter Password  ***");
 							}else{
 			              xhttp.onreadystatechange = function() {
-								//alert("Response Came Back state is="+this.readyState+"Status is"+this. );
-								console.log("hjhkjhjkk");
+							
 			                if (this.readyState == 4) {
 			                	if (this.status == 200) {
 			                		result = JSON.parse(xhttp.response);
@@ -93,7 +92,18 @@
 			                		swal("*** User Not Registered ***");
 			                		document.getElementById("email").value="";
 			                		document.getElementById("password").value="";
-			                	}
+			                	}else if(this.status == 402){
+			                		result = JSON.parse(xhttp.response);
+			                		
+			       
+			                		 localStorage.setItem("companyId", result.company_id);
+			                		 swal("Please Verify account before Login");
+			                         setTimeout(function(){
+			                         	window.location.href ="companyVerification.html";  
+			                       		}, 3000);
+			                         
+			                	}          	
+			                	
 			                }
 			              };
 			              xhttp.open("POST", "/cologin?company_email="+email+"&password="+password, true);
@@ -135,7 +145,16 @@
                     
                 	if (this.status == 200) {
                 		result = JSON.parse(xhttp.response);
-                        window.location.href = "company_index.html"; 
+                		console.log("res="+result);
+                	
+                		 localStorage.setItem("companyId", result.company_id);
+                		 swal("*** Registration Success ***");
+                         setTimeout(function(){
+                         	window.location.href ="companyVerification.html";  
+                       		}, 3000);
+                         
+                		
+                       // window.location.href = "company_index.html"; 
                 	}else if(this.status == 401){
                 		swal("*** Company Already Registered ***");
                 	}else if(this.status == 402){
