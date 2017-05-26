@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Job Board</title>
+		<meta name="description" content="A Job Board">
+        <meta name="author" content="Anshul Agrawal">
+        <meta name="keyword" content="html, css, bootstrap, job-board">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/fontello.css">
+        <link rel="stylesheet" href="css/animate.css">        
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.css">
+        <link rel="stylesheet" href="css/owl.theme.css">
+        <link rel="stylesheet" href="css/owl.transitions.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+        
+        <link rel="stylesheet" href="css/profile.css">
+        <script src="js/script.js"></script>
+        <script>
+        
+        function companyLogin() {  
+ 			localStorage.setItem("companyId", "");
+             window.location.href="company_login.html";
+ 		}
+     
+        function loginRedirect() {  
+        			localStorage.setItem("userId", "");
+                    window.location.href="userLogin.html";
+        }
+        function load() {  
+         	if(localStorage.getItem("userId") == "" || localStorage.getItem("userId") == null )
+            window.location.href="userLogin.html";
+        	else{
+        		
+        	} 
+		}
+        function upload()
+        {
+        	$("#myform1").submit();
+        	
+        	
+        }
+function loadDoc() {
+
+	console.log("test");
+	  var xhttp = new XMLHttpRequest();
+	  var agenda = document.getElementById("agenda").value;
+	  var date = document.getElementById("date").value;
+	  var starttime = document.getElementById("starttime").value; 
+	  var time = document.getElementById("time").value;
+	  var location = document.getElementById("location").value; 
+	  var company_id = localStorage.companyId;
+	 
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      alert("Success");
+	      window.location.href="company_index.html";
+	    }
+	  };
+	  alert("Success");
+	  xhttp.open("GET", "/setInterview?position_id="+localStorage.getItem("positionId")
+			  +"&&user_id="+localStorage.getItem("userId").split("applyToJob")[1]
+			  +"&&agenda="+agenda
+			  +"&&date="+date+"&&starttime="+starttime
+			  +"&&time="+time+"&&location="+location
+			  +"&&company="+localStorage.companyId, true);
+	  xhttp.send();
+}
+
+function getUserData() {
+	var result;
+ var xhttp = new XMLHttpRequest();
+ var firstname = document.getElementById("firstname").value;
+ var lastname = document.getElementById("lastname").value;
+ var email = document.getElementById("email").value; 
+ var phone = document.getElementById("phone").value;
+
+ var skills = document.getElementById("skills").value; 
+
+ xhttp.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+ 	  
+       result = JSON.parse(xhttp.response);
+       
+       document.getElementById("firstname").value = result.firstname;
+       document.getElementById("lastname").value = result.lastname;
+       document.getElementById("email").value = result.email;
+       document.getElementById("phone").value = result.phone;
+       document.getElementById("skills").value = result.skills;
+      
+   }
+ };
+ xhttp.open("GET", "/getUserProfile/"+localStorage.getItem("userId").split("applyToJob")[1], true);
+ xhttp.send();
+}
+
+
+
+function getUserData2() {
+    var result;
+ var xhttp = new XMLHttpRequest();
+
+ xhttp.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+ 	  
+       result = JSON.parse(xhttp.response);
+      console.log(result); 
+       document.getElementById("positiontitle").value = result.position_title;
+       document.getElementById("companyname").value = result.companyProfile.company_name;
+  
+       document.getElementById("image").src=result.companyProfile.logo_url;
+   }
+ };
+ xhttp.open("GET", "/getCompanyPosition/"+localStorage.getItem("positionId"), true);
+ xhttp.send();
+}
+</script>
+    </head>
+    <body onload="getUserData();getUserData2();">
+
+            <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <!-- Body content -->
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <h3>Welcome <span id="welcome"></span> </h3>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <div class="button navbar-right">
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
+              </div>
+              <ul class="main-nav nav navbar-nav navbar-right">
+                <li class="wow fadeInDown" data-wow-delay="0s"><a  href="index.html">Home</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a class="active" onClick="editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="companyLogin();" href="#">Employer Login</a></li>
+                
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+        <!-- Body content -->
+
+
+<div class="container">
+	<div class="row">
+
+
+    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12">
+        
+        <!--=========================input type file change on button ends here====================-->
+
+
+        <div class="full-width">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              
+   				 <hr>
+   				 <br>
+   				 <br>
+   			
+                <form id="myform" onsubmit="loadDoc()" >     
+                 <div class="custom-form">
+                <div class="text-center bg-form">
+                    <div class="img-section">
+                        <img src="img/employee6.png" height="200" width="200" class="imgCircle" alt="Profile picture" id="image">
+                        
+                    
+                     
+                 
+              
+                    </div>
+                    
+                    
+                <div class="col-lg-6 col-md-6">
+                    <input type="text" class="form-control form-input"  required placeholder="First Name" disabled id="firstname">
+                    <span class=" input-place"><i class="fa fa-user" style="font-size:30px;color:black;"></i></span>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <input type="text" class="form-control form-input"  required placeholder="Last Name" disabled id="lastname">
+                    <span class="input-place"><i class="fa fa-user" style="font-size:30px;color:black;"></i></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  required placeholder="Email ID" disabled id="email">
+                    <span class=" input-place"><i class="fa fa-envelope" style="font-size:30px;color:black;"></i></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input" placeholder="Phone Number" disabled id="phone">
+                    <span class="input-place"><i class="fa fa-phone	" style="font-size:30px;color:black;"></i></span>
+                </div>
+                  <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input" placeholder="Skills" disabled id="skills">
+                    <span class="glyphicon input-place"><i class="fa fa-star" style="font-size:30px;color:black;"></i></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <input type="text" class="form-control form-input"  placeholder="Company Name" disabled id="companyname">
+                    <span class="input-place"><i class="fa fa-graduation-cap" style="font-size:30px;color:black;"></i></span>
+                </div>
+                 <div class="col-lg-12 col-md-12">
+                     <textarea class="form-control form-input"  placeholder="Position Title" disabled id="positiontitle">test</textarea>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                     <input type="text" class="form-control form-input"  placeholder="Agenda"  id="agenda"/>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+                  <div class="col-lg-12 col-md-12">
+                     <input type="date" class="form-control form-input"  placeholder="Schedule date"  id="date"/>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+                  <div class="col-lg-12 col-md-12">
+                      <input type="time" class="form-control form-input"  placeholder="StartTime"  id="starttime"/>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+                  <div class="col-lg-12 col-md-12">
+                      <input type="text" class="form-control form-input"  placeholder="Duration"  id="time"/>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+                  <div class="col-lg-12 col-md-12">
+                      <input type="text" class="form-control form-input"  placeholder="Location"  id="location"/>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
+                </div>
+               
+                <div class="col-lg-12 col-md-12 text-center">
+                    <input type="button" class="btn btn-info btn-lg custom-btn" value="Save" id="submit" onclick="loadDoc()">
+                </div>
+                </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+        
+        
+  
+		
+		
+		
+		
+		
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/wow.js"></script>
+        <script src="js/main.js"></script>
+        
+<script>
+
+document.getElementById("userid").value=localStorage.userId;
+    $('input[id=base-input]').change(function() {
+        $('#fake-input').val($(this).val().replace("C:\\fakepath\\", ""));
+    });
+
+    <!--==================Javascript code for custom input type file on button ================-->
+
+    $('input[id=main-input]').change(function() {
+        console.log($(this).val());
+        var mainValue = $(this).val();
+        if(mainValue == ""){
+            document.getElementById("fake-btn").innerHTML = "Choose File";
+        }else{
+            document.getElementById("fake-btn").innerHTML = mainValue.replace("C:\\fakepath\\", "");
+        }
+    });
+
+    <!--=========================input type file change on button ends here====================-->
+
+//    ===================== snippet for profile picture change ============================ //
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('.imgCircle')
+                        .attr('src', e.target.result)
+                        .width(200)
+                        .height(200);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+//    =================================== ends here ============================================ //
+
+    var checkme = document.getElementById('checker');
+    var userImage = document.getElementById('image-input');
+    var userFirstName = document.getElementById('firstname');
+    var userLastName = document.getElementById('lastname');
+    var userPhone = document.getElementById('phone');
+    var userEmail = document.getElementById('email');
+    var userEducation = document.getElementById('education');
+    var userDescription = document.getElementById('description');
+    var userSkills = document.getElementById('skills');
+    var UserSend = document.getElementById('submit');
+    var editPic = document.getElementById('PicUpload');
+    checkme.onchange = function() {
+        UserSend.disabled = !this.checked;
+        userImage.disabled = !this.checked;
+        userFirstName.disabled = !this.checked;
+        userLastName.disabled = !this.checked;
+        userPhone.disabled = !this.checked;
+        //userEmail.disabled = !this.checked;
+        userEducation.disabled = !this.checked;
+        userDescription.disabled = !this.checked;
+        userSkills.disabled = !this.checked;
+        editPic.style.display = this.checked ? 'block' : 'none';
+    };
+    </script>
+    
+    </body>
+</html>
