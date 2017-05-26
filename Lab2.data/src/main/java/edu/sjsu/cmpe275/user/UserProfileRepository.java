@@ -6,5 +6,6 @@ public interface UserProfileRepository  extends CrudRepository<UserProfile,Integ
 
 	//Passenger save(Passenger passenger, int id);
 	UserProfile findByEmail(String email);
+	UserProfile findByUserId(int id);
 
 }

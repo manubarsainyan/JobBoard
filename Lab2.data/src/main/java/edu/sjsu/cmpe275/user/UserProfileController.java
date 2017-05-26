@@ -39,7 +39,7 @@ public class UserProfileController {
 	}
 	
 
-	public UserProfile updateUserProfile(int userId, String firstname, String lastname, String email, String profilePicture, String description,String skills,String education, String phone,String password, String isAccountValidated, String isProfileUpdated){
+	public UserProfile updateUserProfile(int userId, String firstname, String lastname, String email, byte[] profilePicture, String description,String skills,String education, String phone,String password, String isAccountValidated, String isProfileUpdated){
 		UserProfile userProfile=getUserProfile(userId);
 		if(userProfile==null) return userProfile;
 		if(firstname!=null) userProfile.setFirstname(firstname);

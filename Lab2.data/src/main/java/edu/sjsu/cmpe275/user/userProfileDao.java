@@ -39,4 +39,14 @@ public class userProfileDao {
 		return userProfileRepository.findByEmail(email);
 	}
 	
+	
+	public UserProfile findByUserId(int id)
+	{
+		return userProfileRepository.findByUserId(id);
+	}
+	public boolean updateUser(UserProfile userProfile) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }
