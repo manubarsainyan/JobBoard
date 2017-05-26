@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<!DOCTYPE html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Job Board</title>
-        <meta name="description" content="company is a free job board template">
-        <meta name="author" content="Ohidul">
+        <meta name="description" content="A Job Board">
+        <meta name="author" content="Anshul Agrawal">
         <meta name="keyword" content="html, css, bootstrap, job-board">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
@@ -28,8 +24,407 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/script.js"></script>
+         <script>
+        function companyLogin() {  
+ 			localStorage.setItem("companyId", "");
+             window.location.href="company_login.html";
+ 		}
+        function editProfile() {  
+             window.location.href="editProfile.html";
+ 		}
+        function loginRedirect() {  
+        			localStorage.setItem("userId", "");
+                    window.location.href="userLogin.html";
+        }
+        function load() {  
+         	if(localStorage.getItem("userId") == "" || localStorage.getItem("userId") == null )
+            window.location.href="userLogin.html";
+        	else{
+        		
+        	} 
+		}
+        
+        function getUserData() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                 console.log(result);
+                  document.getElementById("welcome").innerHTML = result.firstname;
+              }
+            };
+            xhttp.open("GET", "/getUserProfile/"+localStorage.getItem("userId"), true);
+            xhttp.send();
+        }
+        
+        function getCompany() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                  for(var i=0;i<result.length;i++){
+                  document.getElementById("selectCompany").innerHTML += '<div class="checkbox"><label style="color:grey"><input class="companyCheck" type="checkbox" value="'+result[i].company_name +'" >'+result[i].company_name +'</label></div>';
+                  }
+              }
+            };
+            xhttp.open("GET", "/getCompanyProfile", true);
+            xhttp.send();
+        }
+        function getLocations() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                  for(var i=0;i<result.length;i++){
+                  document.getElementById("locationSelect").innerHTML += '<div class="checkbox"><label style="color:grey"><input class="locationCheck" type="checkbox" value="'+result[i] +'" >'+result[i]+'</label></div>';
+                  }
+              }
+            };
+            xhttp.open("GET", "/getAllPositionLocations", true);
+            xhttp.send();
+        }
+        
+             function test() {
+            	 document.getElementById('jobPostingDiv').innerHTML = "";
+            	 document.getElementById('pagination').innerHTML = "";
+                 var result;
+                 var companyList = $('.companyCheck:checked').map(function() {return this.value;}).get().join('%23');
+                 var LocationList = $('.locationCheck:checked').map(function() {return this.value;}).get().join('%23');
+                 var searchText = document.getElementById("searchText").value;
+                 var minSal = document.getElementById("minSal").value;
+                 var maxSal = document.getElementById("maxSal").value;
+                 var xhttp = new XMLHttpRequest(); 
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            result = JSON.parse(xhttp.response);
+                                   console.log(result);
+                                   document.getElementById("searchJob").style.display = "none";
+                          document.getElementById("searchResults").style.display = "block";
+                         
+                          
+                          document.getElementById("jobCount").innerHTML = result.length;
+                         /*  document.getElementById("testdiv").innerHTML = ""; 
+                          $('div[id^="testdiv"]').html('');
+                          *///console.log(result[0]['age']); //fetch age of 1st patient record 
+                          //alert(result);
+                          var totalpatients = result.length;
+                          var markedJobs=localStorage.getItem("markedJobs");
+                          //alert("marked="+marked);
+                          
+                          
+                      
+                 var pageCount = Math.ceil(totalpatients/2);
+                 var count =0;
+                 for(var j = 1; j <=pageCount; j++){
+                     var displayStyle= "";
+                     var classActive= "class='active'";
+
+                     if(j>1){
+                         displayStyle = "style='display:none;'";
+                         classActive= "";
+                     }
+                     document.getElementById('jobPostingDiv').innerHTML += '<div data-page="'+j+'" class="col-xs-12 col-sm-12 col-md-12" id="testdiv" '+displayStyle+'><table class="table"  id="jobPosting'+j+'"></table>';
+                     
+                   
+                
+
+                     for( var i = 1; i <= 2; i++) {
+                         if(count >= totalpatients)
+                             break;
+                            var skills ="";
+                         	 for(var k=0;k<result[count].skills.length;k++){
+                              	
+                             	 if(k==0){
+                             		 skills = result[count].skills[k].skill;
+                             		 
+                             	 }
+                             	 else{
+                             		 skills += " , " + result[count].skills[k].skill;
+                             	 }
+                              } 
+                         	console.log("PositionsId=#"+result[count].position_id+"#");
+                         	/* var str = "Hello world, welcome to the universe.";
+                         	var n = str.includes("world"); */
+                         /* 	if(markedJobs.includes("#"+result[count].position_id+"#")){
+                         		  if(count%2 == 0){
+                                      document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button> <button class="btn btn-primary" id="unmarkJob'+result[count].position_id +'">Unmark</button></td></tr>'
+                                          }
+                                          else {
+                                               document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button> <button class="btn btn-primary" id="unmarkJob'+result[count].position_id +'">Unmark</button></td></tr>'
+                                          }
+                         	}else{
+                         		  if(count%2 == 0){
+                                      document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button> <button class="btn btn-primary" id="markJob'+result[count].position_id +'">Mark</button></td></tr>'
+                                          }
+                                          else {
+                                               document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button> <button class="btn btn-primary" id="markJob'+result[count].position_id +'">Mark</button></td></tr>'
+                                          }
+                         	} */
+                         	
+                         	if(count%2 == 0){
+                                document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button> <button class="btn btn-primary" id="markJob'+result[count].position_id +'">Mark</button><button class="btn btn-primary" id="unmarkJob'+result[count].position_id +'">Unmark</button></td></tr>'
+                                    }
+                                    else {
+                                         document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button><button class="btn btn-primary" id="markJob'+result[count].position_id +'">Mark</button> <button class="btn btn-primary" id="unmarkJob'+result[count].position_id +'">Unmark</button></td></tr>'
+                                    }	
+
+                         	if(markedJobs.includes("#"+result[count].position_id+"#")){
+                         		var id="#markJob"+result[count].position_id;
+                         		 $(id).hide();
+                         	}else{
+                         		var id="#unmarkJob"+result[count].position_id;
+                        		 $(id).hide();
+                         	}
+                         $('button[id^="applyToJob"]').click(function() {
+                                   localStorage.jobToApply = $(this).attr('id');
+                                    window.location.href="jobDescription.html";
+                                     }); 
+                         
+                        $('button[id^="markJob"]').click(function() {
+                        	 var jobId=$(this).attr('id').split("markJob")[1];
+                        	 markJob(jobId);
+                        	 getMarkedJobs();
+                        	 var id="#markJob"+jobId;
+                     		 $(id).hide();
+                     		id="#unmarkJob"+jobId;
+                    		 $(id).show();
+                        	 }); 
+                         
+                         $('button[id^="unmarkJob"]').click(function() {
+                        	 var jobId=$(this).attr('id').split("unmarkJob")[1];
+                        	 unmarkJob(jobId);
+                        	 getMarkedJobs();
+                        	 var id="#unmarkJob"+jobId;
+                     		 $(id).hide();
+                     		id="#markJob"+jobId;
+                    		 $(id).show();
+                               }); 
+                         count++;
+
+
+                     }
+
+                     document.getElementById('pagination').innerHTML += '<li '+classActive+' data-page="'+j+'"><a href="#" id=pagin"'+j+'">'+j+'</a></li>'
+                 }
+
+
+
+                 var paginationHandler = function(){
+                 // store pagination container so we only select it once
+                 var $paginationContainer = $(".pagination-container"),
+            $pagination = $paginationContainer.find('.pagination ul');
+                    console.log($pagination.find("li a"));
+			
+                 // click event
+                 $('a[id^="pagin"]').click(function(e) {
+                	 console.log("insghjghjgjh");
+                     e.preventDefault();
+
+                     // get parent li's data-page attribute and current page
+                     var parentLiPage = $(this).parent('li').data("page"),
+                         currentPage = parseInt( $(".pagination-container div[data-page]:visible").data('page') ),
+                         numPages = $paginationContainer.find("div[data-page]").length;
+                     console.log(currentPage);
+                     $(this).parent('li').parent('ul').find('*').removeAttr("class");
+                     $(this).parent('li').addClass("active");
+
+                     // make sure they aren't clicking the current page
+                     if ( parseInt(parentLiPage) !== parseInt(currentPage) ) {
+                         // hide the current page
+                         $paginationContainer.find("div[data-page]:visible").hide();
+
+                         if ( parentLiPage === '+' ) {
+                             // next page
+                             $paginationContainer.find("div[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").show();
+                         } else if ( parentLiPage === '-' ) {
+                             // previous page
+                             $paginationContainer.find("div[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").show();
+                         } else {
+                             // specific page
+                             $paginationContainer.find("div[data-page="+parseInt(parentLiPage)+"]").show();
+                         }
+
+                     }
+                 });
+             };
+             $( document ).ready( paginationHandler );
+                     }
+                 };
+
+            xhttp.open("GET", "/searchJobs?company="+companyList+"&location="+LocationList+"&minsal="+minSal+"&maxsal="+maxSal+"&text="+searchText, true);
+            xhttp.send();
+                 
+             }
+             
+             function getMarkedJobs(){
+                 var xhttp = new XMLHttpRequest(); 
+                 var userId=localStorage.getItem("userId");
+                    xhttp.onreadystatechange = function() {
+                    	//alert(this.status);
+                        if (this.readyState == 4 && this.status == 200) {
+                            result = xhttp.response;
+                           
+                            //localStorage.setItem("markedJobs")=result;
+                            localStorage.markedJobs=result;
+                            //alert("at getMarkedJobs"+result);
+                           // return result;
+                     }
+                 };
+
+            xhttp.open("GET", "/getAllMarkedJobString?userId="+userId, true);
+            xhttp.send();
+	 
+             }
+             
+             
+             
+             
+             function markJob(jobId) {
+               	 var applicantID= localStorage.userId;
+               	 
+              	  var result;
+                  var xhttp = new XMLHttpRequest();	
+                    xhttp.onreadystatechange = function() {
+                      if (this.readyState == 4) {
+                      	if (this.status == 200) {
+                      		/* document.getElementById("mark").style.display = "none";
+                            document.getElementById("").style.display = "block"; */    
+                      	}
+                      }
+                    };
+
+                  
+                    xhttp.open("POST", "/MarkJob?applicantId="+applicantID+"&jobId="+jobId, true);
+                    xhttp.send();
+  
+            }
+             
+              function unmarkJob(jobId) {
+            	 
+            	  var applicantID= localStorage.userId;
+                 	
+                 	
+                	  var result;
+                    var xhttp = new XMLHttpRequest();
+	
+                      xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4) {
+                        	if (this.status == 200) {
+                        		/* document.getElementById("unmark").style.display = "none";
+                                document.getElementById("mark").style.display = "block";  */  
+                        	}
+                        }
+                      };
+                      xhttp.open("POST", "/UnMarkJob?applicantId="+applicantID+"&jobId="+jobId, true);
+                      xhttp.send();
+            }
+             
+
+
+
+
+
+
+
+             function userinterview()
+             {
+            	 window.location.href="/userInterviews.html"
+             }
+
+             function viewMarked() {
+            	 document.getElementById('jobPostingDiv').innerHTML = "";
+            	 document.getElementById('pagination').innerHTML = "";
+                 var xhttp = new XMLHttpRequest(); 
+                 var userId=localStorage.getItem("userId");
+                // alert(userId);
+                    xhttp.onreadystatechange = function() {
+                    	//alert(this.status);
+                        if (this.readyState == 4 && this.status == 200) {
+                            result = JSON.parse(xhttp.response);
+                            //alert(result);
+                            console.log(result);
+                           document.getElementById("searchJob").style.display = "none";
+                          document.getElementById("searchResults").style.display = "block";
+                          document.getElementById("jobCount").innerHTML = result.length;
+                          //alert(result.length);
+                         var totalpatients = result.length;
+                 var pageCount = Math.ceil(totalpatients/2);
+                 var count =0;
+                 for(var j = 1; j <=totalpatients; j++){
+                     var displayStyle= "";
+                     var classActive= "class='active'";
+
+                     if(j>1){
+                         displayStyle = "style='display:none;'";
+                         classActive= "";
+                     }
+                     document.getElementById('jobPostingDiv').innerHTML += '<div data-page="'+j+'" class="col-xs-12 col-sm-12 col-md-12" id="testdiv" '+displayStyle+'><table class="table"  id="jobPosting'+j+'"></table>';
+
+                     for( var i = 1; i <= 2; i++) {
+                         if(count >= totalpatients)
+                             break;
+                            var skills ="";
+                         	 for(var k=0;k<result[count].skills.length;k++){
+                              	
+                             	 if(k==0){ skills = result[count].skills[k].skill;}
+                             	 else{ skills += " , " + result[count].skills[k].skill;}
+                              } 
+                           if(count%2 == 0){
+                          document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button></td></tr>'
+                              }
+                              else {
+                                   document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button></td></tr>'
+                              }
+
+                         $('button[id^="applyToJob"]').click(function() {
+                                   localStorage.jobToApply = $(this).attr('id');
+                                    window.location.href="jobDescription.html";
+                                     }); 
+                         count++;
+                     }
+                 }
+
+                     }
+                 };
+
+            xhttp.open("GET", "/searchMarkedJobs?userId="+userId, true);
+            xhttp.send();    
+             }
+             
+             function viewAppliedJobs(){
+            	 window.location.href="viewAppliedJobs.html";
+             }   
+             
+             
+             function chengeMaxSal() {
+                 console.log("gygh");
+//                 document.getElementById("#maxSal").setAttribute("min", "56 ");
+            $("#maxSal").attr({        // substitute your own
+           "min" : $("#minSal").val()         // values (or variables) here
+            });
+             }
+             
+            function newSearch() {
+                document.getElementById("searchJob").style.display = "block";
+                document.getElementById("searchResults").style.display = "none";
+            }
+             
+          
+
+        
+        </script>
     </head>
-    <body>
+  <body onload="load();getUserData();getCompany();getLocations();getMarkedJobs();">
+   <!--      <body onload="">-->
         <div id="preloader">
             <div id="status">&nbsp;</div>
         </div>
@@ -44,156 +439,100 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
+              <h3>Welcome <span id="welcome"></span> !</h3>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <div class="button navbar-right">
-                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" data-wow-delay="0.8s" >Login/SignUp</button>
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
               </div>
               <ul class="main-nav nav navbar-nav navbar-right">
                 <li class="wow fadeInDown" data-wow-delay="0s"><a class="active" href="#">Home</a></li>
-                <li class="wow fadeInDown" data-wow-delay="0.1s"><a href="#">Job Seekers</a></li>
-                <li class="wow fadeInDown" data-wow-delay="0.2s"><a href="#">Employeers</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a onClick="editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="companyLogin();" href="#">Employer Login</a></li>
+               <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="userinterview();" href="#">View scheduled interviews</a></li>
+                
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
-        <div class="slider-area">
-            <div class="container slider-content">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12">
-                        <div class="search-form wow pulse" data-wow-delay="0.8s">
-                            <form action="" class=" form-inline">
+                           <div class="container" id="searchJob" style="margin-top:100px;">
+                           <center><h2>Search for a Job!</h2></center>
+                           <br>
+                            <div class="row">
+                            <form  class="form-" id="myForm">
+                               <div class="col-md-12">
+                               <div class="row">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Job Key Word">
+                                    <input type="text" class="form-control" id="searchText" placeholder="Job Key Word">
                                 </div>
+                                   </div>
+                                <div class="row">
+                                <div class="col-md-3">
+                                <div class="form-group" id="selectCompany">
+                                      <label>Select Company</label>
+                                      <div id="selectCompany">
+                                     
+                                        </div>
+                                </div>
+                                    </div>
+                                    <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="" id="" class="form-control">
-                                        <option>Select Your City</option>
-                                        <option selected>New york, CA</option>
-                                        <option>New york, CA</option>
-                                        <option>New york, CA</option>
-                                        <option>New york, CA</option>
-                                    </select>
+                                    <label>Select Location</label>
+                                       <div id="locationSelect">
+                                     
+                                        </div>
                                 </div>
+                                    </div>
+                                    <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="" id="" class="form-control">
-                                        <option>Select Your Category</option>
-                                        <option selected>Graphic Design</option>
-                                        <option>Web Design</option>
-                                        <option>App Design</option>
-                                    </select>
+                                    <label>Select Salary Range</label>
+                                       <input type="number" class="form-control" id="minSal" onkeyup="chengeMaxSal()" placeholder="Minimum Salary">
+                                       <br>
+                                       <input type="number" class="form-control" id="maxSal" min="" placeholder="Maximum Salary">
                                 </div>
-                                <input type="submit" class="btn" value="Search">
+                                    </div>
+                                   </div>
+                                </div>
+                                <input type="button" class="btn btn-primary btn-lg " value="Search" onclick="test()">
+                                <input type="button" class="btn btn-primary btn-lg " value="View Marked Jobs" onclick="viewMarked()">
+                                <input type="button" class="btn btn-primary btn-lg " value="View Applied Jobs" onclick="viewAppliedJobs()">
+                                
                             </form>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-area">
-            <div class="container">
-                <div class="row page-title text-center wow bounce" data-wow-delay="1s">
-                    <h5>Recent Jobs</h5>
-                    <h2><span>54716</span> Available jobs for you</h2>
+                        </div>
+                   
+                     <div class="container" id="searchResults" style="display:none">
+                <div class="row page-title text-center wow bounce"  data-wow-delay="1s">
+                    <h5>Search Result</h5>
+                    <h2><span id="jobCount"></span> Available jobs for you</h2>
                 </div>
                 <div class="row jobs">
-                    <div class="col-md-12">
-                        <div class="job-posts table-responsive">
-                            <table class="table">
-                                <tr class="odd wow fadeInUp" data-wow-delay="1s">
-                                    <td class="tbl-logo"><img src="img/job-logo1.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Web Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>dribbble community</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="even wow fadeInUp" data-wow-delay="1.1s">
-                                    <td class="tbl-logo"><img src="img/job-logo2.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Front End Developer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Jolil corporation</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="odd wow fadeInUp" data-wow-delay="1.2s">
-                                    <td class="tbl-logo"><img src="img/job-logo3.png" alt=""></td>
-                                    <td class="tbl-title"><h4>HR Manager <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Fanta bevarage</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="even wow fadeInUp" data-wow-delay="1.3s">
-                                    <td class="tbl-logo"><img src="img/job-logo4.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Internship Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Google</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="odd wow fadeInUp" data-wow-delay="1.4s">
-                                    <td class="tbl-logo"><img src="img/job-logo5.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Software Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Microsoft</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="even hide-jobs">
-                                    <td class="tbl-logo"><img src="img/job-logo4.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Internship Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Google</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="odd hide-jobs">
-                                    <td class="tbl-logo"><img src="img/job-logo5.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Software Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Microsoft</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="even hide-jobs">
-                                    <td class="tbl-logo"><img src="img/job-logo4.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Internship Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Google</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                                <tr class="odd hide-jobs">
-                                    <td class="tbl-logo"><img src="img/job-logo5.png" alt=""></td>
-                                    <td class="tbl-title"><h4>Software Designer <br><span class="job-type">full time</span></h4></td>
-                                    <td><p>Microsoft</p></td>
-                                    <td><p><i class="icon-location"></i>San Franciso, USA</p></td>
-                                    <td><p>&dollar; 14000</p></td>
-                                    <td class="tbl-apply"><a href="#">Apply now</a></td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="col-md-12 pagination-container">
+                        <div id="jobPostingDiv" class="job-posts table-responsive" ></div>
+                            
+                      
+<div class="row graphics pagination-container" >
+                        <center>
+                            <div class="pagination">
+                            <ul id="pagination" class="pagination pagination-centered pagination-large">
+                            </ul>
+                            </div>
+                            </center>
+                            </div>
                         <div class="more-jobs">
-                            <a href=""> <i class="fa fa-refresh"></i>View more jobs</a>
+                            <button onclick="newSearch();" class="btn btn-primary btn-lg "> <i class="fa fa-refresh"></i>Start New Search</button>
+                             <input type="button" class="btn btn-primary btn-lg " value="View Marked Jobs" onclick="viewMarked()">
+                             <input type="button" class="btn btn-primary btn-lg " value="View Applied Jobs" onclick="viewAppliedJobs()">
                         </div>
                     </div>
+                         </div>
+           </div>
+           
+          
 
-                </div>
-            </div>
-            <hr>
-
-        </div>
-        <div class="footer-area">
-            <div class="container">
-                <div class="row footer">
-                </div>
-                <div class="row footer-copy">
-                </div>
-            </div>
-        </div>
+        
+       
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
@@ -201,5 +540,7 @@
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/wow.js"></script>
         <script src="js/main.js"></script>
+        
     </body>
+    
 </html>
