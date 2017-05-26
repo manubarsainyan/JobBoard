@@ -7,46 +7,74 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Job Board</title>
-        <meta name="description" content="company is a free job board template">
-        <meta name="author" content="Ohidul">
+		<meta name="description" content="A Job Board">
+        <meta name="author" content="Anshul Agrawal">
         <meta name="keyword" content="html, css, bootstrap, job-board">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!--        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>-->
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-<!--        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">-->
-<!--        <link rel="icon" href="favicon.ico" type="image/x-icon">-->
-
-<!--        <link rel="stylesheet" href="css/normalize.css">-->
-<!--        <link rel="stylesheet" href="css/font-awesome.min.css">-->
-<!--        <link rel="stylesheet" href="css/fontello.css">-->
-<!--        <link rel="stylesheet" href="css/animate.css">        -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/fontello.css">
+        <link rel="stylesheet" href="css/animate.css">        
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-<!--        <link rel="stylesheet" href="css/owl.carousel.css">-->
-<!--        <link rel="stylesheet" href="css/owl.theme.css">-->
-<!--        <link rel="stylesheet" href="css/owl.transitions.css">-->
-
-        <link rel="stylesheet" href="css/profile.css">
+        <link rel="stylesheet" href="css/owl.carousel.css">
+        <link rel="stylesheet" href="css/owl.theme.css">
+        <link rel="stylesheet" href="css/owl.transitions.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+        
+        <link rel="stylesheet" href="css/profile.css">
         <script src="js/script.js"></script>
         <script>
+        
+        function companyLogin() {  
+ 			localStorage.setItem("companyId", "");
+             window.location.href="company_login.html";
+ 		}
+     
+        function loginRedirect() {  
+        			localStorage.setItem("userId", "");
+                    window.location.href="userLogin.html";
+        }
+        function load() {  
+         	if(localStorage.getItem("userId") == "" || localStorage.getItem("userId") == null )
+            window.location.href="userLogin.html";
+        	else{
+        		
+        	} 
+		}
+        function upload()
+        {
+        	$("#myform1").submit();
+        	
+        	
+        }
 function loadDoc() {
+
 	console.log("test");
 	  var xhttp = new XMLHttpRequest();
 	  var firstname = document.getElementById("firstname").value;
 	  var lastname = document.getElementById("lastname").value;
 	  var email = document.getElementById("email").value; 
-	 
+	  var phone = document.getElementById("phone").value;
+	  var education = document.getElementById("education").value;
+	  var description = document.getElementById("description").value; 
+	  var skills = document.getElementById("skills").value; 
+	  console.log("education" + education);
 	  xhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
-	      
+	      //alert("Success");
+	      window.location.href="editProfile.html";
 	    }
 	  };
-	  xhttp.open("POST", "/createUserProfile?firstname="+firstname+"&lastname="+lastname+"&email="+email+"&description=abc&skills=java&education=MS&phone=123", true);
+	  //alert("Success");
+	  xhttp.open("POST", "/updateUserProfile/"+localStorage.userId+"?firstname="+firstname+"&lastname="+lastname+"&email="+email+"&description="+description+"&skills="+skills+"&education="+education+"&phone="+phone, true);
 	  xhttp.send();
 }
 
@@ -63,9 +91,9 @@ function getUserData() {
 
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-    	  alert("bef Done");
+    	  
           result = JSON.parse(xhttp.response);
-          alert("parse Done");
+          
           document.getElementById("firstname").value = result.firstname;
           document.getElementById("lastname").value = result.lastname;
           document.getElementById("email").value = result.email;
@@ -73,18 +101,47 @@ function getUserData() {
           document.getElementById("education").value = result.education;
           document.getElementById("description").value = result.description;
           document.getElementById("skills").value = result.skills;
+          $blob=result.profilePicture;
+          document.getElementById("image").src="data:image/jpeg;base64,"+$blob;
       }
     };
-    xhttp.open("GET", "/getUserProfile/5", true);
+    xhttp.open("GET", "/getUserProfile/"+localStorage.getItem("userId"), true);
     xhttp.send();
 }
         </script>
     </head>
     <body onload="getUserData()">
 
-        <div id="preloader">
+            <div id="preloader">
             <div id="status">&nbsp;</div>
         </div>
+        <!-- Body content -->
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <h3>Welcome <span id="welcome"></span> </h3>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <div class="button navbar-right">
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
+              </div>
+              <ul class="main-nav nav navbar-nav navbar-right">
+                <li class="wow fadeInDown" data-wow-delay="0s"><a  href="index.html">Home</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a class="active" onClick="editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="companyLogin();" href="#">Employer Login</a></li>
+                
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
         <!-- Body content -->
 
 
@@ -99,50 +156,62 @@ function getUserData() {
 
         <div class="full-width">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <form id="myform">
+              <form id="myform1" action="uploadpic" method="post" enctype="multipart/form-data">
+     			 <input type="file" name="file" id="file" style="margin-left: 215px;margin-top: 10px;margin-bottom: 10px;">
+   				 <input type="submit" class="btn btn-sm"  value="Change Image"/> 
+   				<input type="hidden"  id="userid" name="userid">
+   				 </form> 
+   				 <hr>
+   				 <br>
+   				 <br>
+   			
+                <form id="myform" onsubmit="loadDoc()" >     
                 <div class="custom-form">
                 <div class="text-center bg-form">
                     <div class="img-section">
-                        <img src="img/employee6.png" height="200" width="200" class="imgCircle" alt="Profile picture">
-                        <span class="fake-icon-edit" id="PicUpload" style="color: #ffffff;"><span class="glyphicon glyphicon-camera camera"></span></span>
+                        <img src="img/employee6.png" height="200" width="200" class="imgCircle" alt="Profile picture" id="image">
+                        
+                    
+                     
                     <div class="col-lg-12">
-                        <h4 class="text-right col-lg-12" style="color:black"><span class="glyphicon glyphicon-edit" style="color:black"></span> Edit Profile</h4>
+                        <h4 class="text-right col-lg-12" style="color:black"><i class="fa fa-edit" style="font-size:30px;color:black;"></i><span class="" style="color:black"></span> Edit Profile</h4>
                         <input type="checkbox" class="form-control" id="checker">
                     </div>
+              
                     </div>
                     
                     <input type="file" id="image-input" onchange="readURL(this);" accept="image/*" disabled class="form-control form-input Profile-input-file" >
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <input type="text" class="form-control form-input" value="Abhinit Roy" placeholder="First Name" disabled id="firstname">
-                    <span class="glyphicon glyphicon-user input-place"></span>
+                    <input type="text" class="form-control form-input"  required placeholder="First Name" disabled id="firstname">
+                    <span class=" input-place"><i class="fa fa-user" style="font-size:30px;color:black;"></i></span>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <input type="text" class="form-control form-input" value="Abhinit Roy" placeholder="Last Name" disabled id="lastname">
-                    <span class="glyphicon input-place"></span>
+                    <input type="text" class="form-control form-input"  required placeholder="Last Name" disabled id="lastname">
+                    <span class="input-place"><i class="fa fa-user" style="font-size:30px;color:black;"></i></span>
                 </div>
                 <div class="col-lg-12 col-md-12">
-                    <input type="text" class="form-control form-input" value="rgba@gmail.com" placeholder="Email ID" disabled id="email">
-                    <span class="glyphicon glyphicon-envelope input-place"></span>
+                    <input type="text" class="form-control form-input"  required placeholder="Email ID" disabled id="email">
+                    <span class=" input-place"><i class="fa fa-envelope" style="font-size:30px;color:black;"></i></span>
                 </div>
                 <div class="col-lg-12 col-md-12">
-                    <input type="text" class="form-control form-input" value="+91-00000000" placeholder="Phone Number" disabled id="phone">
-                    <span class="glyphicon glyphicon-earphone input-place"></span>
+                    <input type="text" class="form-control form-input" placeholder="Phone Number" disabled id="phone">
+                    <span class="input-place"><i class="fa fa-phone	" style="font-size:30px;color:black;"></i></span>
                 </div>
                 <div class="col-lg-12 col-md-12">
-                    <input type="text" class="form-control form-input" value="Chandigarh, India" placeholder="Education" disabled id="education">
-                    <span class="glyphicon glyphicon-eduaction input-place"></span>
+                    <input type="text" class="form-control form-input"  placeholder="Education" disabled id="education">
+                    <span class="input-place"><i class="fa fa-graduation-cap" style="font-size:30px;color:black;"></i></span>
                 </div>
                  <div class="col-lg-12 col-md-12">
                      <textarea class="form-control form-input"  placeholder="Description" disabled id="description">test</textarea>
-                    <span class="glyphicon input-place"></span>
+                    <span class="glyphicon input-place"><i class="fa fa-navicon" style="font-size:30px;color:black;"></i></span>
                 </div>
                  <div class="col-lg-12 col-md-12">
-                    <input type="text" class="form-control form-input" value="Chandigarh, India" placeholder="Skills" disabled id="skills">
-                    <span class="glyphicon input-place"></span>
+                    <input type="text" class="form-control form-input" placeholder="Skills" disabled id="skills">
+                    <span class="glyphicon input-place"><i class="fa fa-star" style="font-size:30px;color:black;"></i></span>
                 </div>
                 <div class="col-lg-12 col-md-12 text-center">
-                    <input type="button" class="btn btn-info btn-lg custom-btn" value="Save" id="submit" onclick="loadDoc()"><span class="glyphicon glyphicon-save"></span>
+                    <input type="submit" class="btn btn-info btn-lg custom-btn" value="Save" id="submit" disabled>
                 </div>
                 </div>
                 </form>
@@ -155,14 +224,7 @@ function getUserData() {
 </div>
         
         
-        <div class="footer-area">
-            <div class="container">
-                <div class="row footer">
-                </div>
-                <div class="row footer-copy">
-                </div>
-            </div>
-        </div>
+  
 		
 		
 		
@@ -176,7 +238,7 @@ function getUserData() {
         <script src="js/main.js"></script>
         
 <script>
-
+document.getElementById("userid").value=localStorage.userId;
     $('input[id=base-input]').change(function() {
         $('#fake-input').val($(this).val().replace("C:\\fakepath\\", ""));
     });
@@ -229,7 +291,7 @@ function getUserData() {
         userFirstName.disabled = !this.checked;
         userLastName.disabled = !this.checked;
         userPhone.disabled = !this.checked;
-        userEmail.disabled = !this.checked;
+        //userEmail.disabled = !this.checked;
         userEducation.disabled = !this.checked;
         userDescription.disabled = !this.checked;
         userSkills.disabled = !this.checked;
