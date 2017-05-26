@@ -1,0 +1,190 @@
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Patient Monitoring System">
+    <meta name="keywords" content="CMPE275, SJSU, Job Board, term Project">
+    <meta name="author" content="HackJS">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="author" href="https://www.linkedin.com/in/anshul-agrawal/">
+    <title>Home Page</title> 
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.css"/>
+    
+    <style> 
+    body {
+        padding-top: 90px;
+    }
+    </style>
+    <script>
+        function login() {  
+        	  var result;
+              var xhttp = new XMLHttpRequest();
+              var email = document.getElementById("email").value;
+              var password = document.getElementById("password").value;
+              var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+				if(email==null || email==""){
+					swal("*** Enter Email ID ***");
+				}else  if(!emailPattern.test(email)) {
+	            	  swal("*** Enter a Valid Email ID ***");	
+	            	  
+	            }else if(password==null || password==""){
+					swal("*** Enter Password  ***");
+				}else{
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                	if (this.status == 200) {
+                		result = JSON.parse(xhttp.response);
+                        console.log(result.userId);
+                        localStorage.setItem("userId", result.userId);
+                        window.location.href = "index.html";
+                	}else if(this.status == 401){
+                		swal("*** Invalid Password ***");
+                		document.getElementById("password").value="";
+                	}else if(this.status == 404){
+                		swal("*** User Not Registered ***");
+                		document.getElementById("email").value="";
+                		document.getElementById("password").value="";
+                	}else if(this.status == 405){
+                		result = JSON.parse(xhttp.response);
+                		swal("Please verify account before Login");
+                		 localStorage.setItem("userId", result.userId);
+                		 
+                         setTimeout(function(){
+                         	window.location.href ="verification.html";  
+                       		}, 3000);
+                	}
+                }
+              };
+              xhttp.open("POST", "/login?email="+email+"&password="+password, true);
+              xhttp.send();
+        }//else ends here
+        }
+            
+        function register() {
+              var result;
+              var xhttp = new XMLHttpRequest();
+              var email_reg = document.getElementById("email_reg").value;
+              var password_reg = document.getElementById("password_reg").value;
+              var confirmPassword = document.getElementById("confirm-password").value;
+              var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+             
+             
+              if(email_reg==null || email_reg==""){
+					swal("*** Enter Email ID ***");	
+				}
+              else  if(!emailPattern.test(email_reg)) {
+            	  swal("*** Enter a Valid Email ID ***");	
+            	  
+              }else if(password_reg==null || password_reg==""){
+					swal("*** Enter Password  ***");
+				}else if(confirmPassword==null || confirmPassword==""){
+					swal("*** Enter Confirm Password  ***");
+					
+				} else if(password_reg!=confirmPassword){
+					swal("*** Password and Confirm Password are not the same. ***");
+				} else{
+              
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                	if (this.status == 200) {
+                    result = JSON.parse(xhttp.response);
+                    swal("*** Registration Successful ***");
+                    localStorage.setItem("userId", result.userId);
+                    setTimeout(function(){
+                    	window.location.href ="verification.html";  
+                  		}, 3000);
+                    
+                    
+                	}else if(this.status == 401){
+                		swal("*** User Already registered ***");
+                		document.getElementById("email_reg").value="";
+                		document.getElementById("password_reg").value="";
+                		document.getElementById("confirm-password").value="";
+                	}else if(this.status == 406){
+                		swal("* Please verify the account before login *");
+                		document.getElementById("email").value="";
+                		document.getElementById("password").value="";
+                	}
+                	
+                }
+              };
+              xhttp.open("POST", "/createUserProfile?email="+email_reg+"&password="+password_reg, true);
+              xhttp.send();
+				}
+        }
+        </script> 
+        
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+         <center> <h2>Find your dream job!!!</h2></center>
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a href="#" class="active" id="login-form-link">Login</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a href="#" id="register-form-link">Register</a>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="login-form" method="post" role="form" style="display: block;">
+                                <div class="form-group">
+                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="email" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="button" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary" onclick="login()" value="Log In">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form id="register-form" role="form" style="display: none;">
+                                <div class="form-group">
+                                    <input type="email" name="email" id="email_reg" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password" id="password_reg" tabindex="2" class="form-control" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-primary" onclick="register()" value="Register Now">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="text-center">
+              <a href="company_login.html" tabindex="5" class="forgot-password">Click here for Employer Login!</a>
+     </div>
+</div>
+
+</body>
+</html>
+
+
