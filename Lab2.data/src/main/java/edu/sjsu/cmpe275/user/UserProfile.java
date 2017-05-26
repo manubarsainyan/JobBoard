@@ -31,7 +31,7 @@ public class UserProfile {
 		@Column(name="email_address",unique=true)
 		private String email;
 		@Column(name="profile_picture")
-	    private String profilePicture;
+	    private byte[] profilePicture;
 		@Column(name="description")
 	    private String description;
 		@Column(name="skills")
@@ -90,10 +90,10 @@ public class UserProfile {
 		this.email = email;
 	}
 	
-	public String getProfilePicture() {
+	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
-	public void setProfilePicture(String profilePicture) {
+	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 	public String getDescription() {
