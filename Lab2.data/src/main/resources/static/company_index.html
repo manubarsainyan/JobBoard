@@ -3,8 +3,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Job Board</title>
-        <meta name="description" content="company is a free job board template">
-        <meta name="author" content="Ohidul">
+        <meta name="description" content="Job Board">
+        <meta name="author" content="Anshul Agrawal">
         <meta name="keyword" content="html, css, bootstrap, job-board">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
@@ -26,7 +26,7 @@
         <script src="js/script.js"></script>
          <script>
         function companyLogin() {  
- 			localStorage.setItem("companyId", "");
+ 			localStorage.setItem("userId", "");
              window.location.href="userLogin.html";
  		}
         function editProfile() {  
@@ -34,16 +34,15 @@
  		}
         function loginRedirect() {  
         			localStorage.setItem("companyId", "");
-                    window.location.href="company_login.html";
+                    window.location.href="companyLogin.html";
         }
-      /*   function load() {  
+        function load() {  
         	 if(localStorage.getItem("companyId") == "" || localStorage.getItem("companyId") == null )
             window.location.href="companyLogin.html";
         	else{
         		
         	} 
- */		
- 
+		}
         
         function getUserData() {
             var result;
@@ -51,11 +50,11 @@
 				
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-            	  alert("bef Done");
+            	 
                   result = JSON.parse(xhttp.response);
-                  alert("parse Done");
+               
                   document.getElementById("welcome").innerHTML = result.company_name;
-                  document.getElementById("Companylogo").innerHTML = '<img src="'+result.logo_url+'" alt="">' ;
+                 
                 /*   document.getElementById("lastname").value = result.lastname;
                   document.getElementById("email").value = result.email;
                   document.getElementById("phone").value = result.phone;
@@ -70,8 +69,7 @@
         
         </script>
     </head>
-  <!--   <body onload="load();getUserData();">    -->
-  <bodY>
+    <body onload="load();getUserData();">
         <div id="preloader">
             <div id="status">&nbsp;</div>
         </div>
@@ -86,8 +84,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <p class="navbar-brand"  id="Companylogo"></p>
-              <!-- <h3>Welcome <span id="welcome"></span> </h3> -->
+         <!--      <p class="navbar-brand"  id="Companylogo"></p> -->
+             <h3>Welcome <span id="welcome"></span> !</h3>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -97,7 +95,7 @@
               <ul class="main-nav nav navbar-nav navbar-right">
                 <li class="wow fadeInDown" data-wow-delay="0s"><a class="active" href="#">Home</a></li>
                 <li class="wow fadeInDown" data-wow-delay="0.2s"><a onClick="editProfile();" href="#">View/Edit Profile</a></li>
-                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="companyLogin();" href="#">Job Seeker Login</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="userLogin();" href="#">Job Seeker Login</a></li>
                 
               </ul>
             </div><!-- /.navbar-collapse -->
@@ -113,6 +111,12 @@
        <br>
        <div style="text-align:center"> 
        <button name="postjobs"><a href = "postjob.html">Post new Job</a></button>
+
+                 </div>
+  <br>
+       <br>
+       <div style="text-align:center"> 
+       <button name="postjobs"><a href = "companyinterviews.html">View Scheduled Interviews</a></button>
 
                  </div>
 
