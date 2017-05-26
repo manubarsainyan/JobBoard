@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Job Board</title>
+        <meta name="description" content="A Job Board">
+        <meta name="author" content="Anshul Agrawal">
+        <meta name="keyword" content="html, css, bootstrap, job-board">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/fontello.css">
+        <link rel="stylesheet" href="css/animate.css">        
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.css">
+        <link rel="stylesheet" href="css/owl.theme.css">
+        <link rel="stylesheet" href="css/owl.transitions.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/script.js"></script>
+         <script>
+        function companyLogin() {  
+ 			localStorage.setItem("companyId", "");
+             window.location.href="company_login.html";
+ 		}
+        function editProfile() {  
+             window.location.href="editProfile.html";
+ 		}
+        function loginRedirect() {  
+        			localStorage.setItem("userId", "");
+                    window.location.href="userLogin.html";
+        }
+        function load() {  
+         	if(localStorage.getItem("userId") == "" || localStorage.getItem("userId") == null )
+            window.location.href="userLogin.html";
+        	else{
+        		
+        	} 
+		}
+        
+        function getUserData() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                 console.log(result);
+                  document.getElementById("welcome").innerHTML = result.firstname;
+              }
+            };
+            xhttp.open("GET", "/getUserProfile/"+localStorage.getItem("userId"), true);
+            xhttp.send();
+        }
+        
+        function getCompany() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                  for(var i=0;i<result.length;i++){
+                  document.getElementById("selectCompany").innerHTML += '<div class="checkbox"><label style="color:grey"><input class="companyCheck" type="checkbox" value="'+result[i].company_name +'" >'+result[i].company_name +'</label></div>';
+                  }
+              }
+            };
+            xhttp.open("GET", "/getCompanyProfile", true);
+            xhttp.send();
+        }
+        function getLocations() {
+            var result;
+            var xhttp = new XMLHttpRequest(); 
+
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            	 
+                  result = JSON.parse(xhttp.response);
+                  for(var i=0;i<result.length;i++){
+                  document.getElementById("locationSelect").innerHTML += '<div class="checkbox"><label style="color:grey"><input class="locationCheck" type="checkbox" value="'+result[i] +'" >'+result[i]+'</label></div>';
+                  }
+              }
+            };
+            xhttp.open("GET", "/getAllPositionLocations", true);
+            xhttp.send();
+        }
+        
+             function test() {
+            	 document.getElementById('jobPostingDiv').innerHTML = "";
+            	 document.getElementById('pagination').innerHTML = "";
+                 var xhttp = new XMLHttpRequest(); 
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            result = JSON.parse(xhttp.response);
+                                   console.log(result);
+                                   document.getElementById("searchJob").style.display = "none";
+                          document.getElementById("searchResults").style.display = "block";
+                         
+                          
+                          document.getElementById("jobCount").innerHTML = result.length;
+                         var totalpatients = result.length;
+                 var pageCount = Math.ceil(totalpatients/2);
+                 var count =0;
+                 for(var j = 1; j <=totalpatients; j++){
+                     var displayStyle= "";
+                     var classActive= "class='active'";
+
+                     if(j>1){
+                         displayStyle = "style='display:none;'";
+                         classActive= "";
+                     }
+                     document.getElementById('jobPostingDiv').innerHTML += '<div data-page="'+j+'" class="col-xs-12 col-sm-12 col-md-12" id="testdiv" '+displayStyle+'><table class="table"  id="jobPosting'+j+'"></table>';
+                     
+                   
+                
+
+                     for( var i = 1; i <= 2; i++) {
+                         if(count >= totalpatients)
+                             break;
+                            var skills ="";
+                         	 for(var k=0;k<result[count].skills.length;k++){
+                              	
+                             	 if(k==0){
+                             		 skills = result[count].skills[k].skill;
+                             		 
+                             	 }
+                             	 else{
+                             		 skills += " , " + result[count].skills[k].skill;
+                             	 }
+                              } 
+                           if(count%2 == 0){
+                          document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button></td></tr>'
+                              }
+                              else {
+                                   document.getElementById('jobPosting'+j+'').innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[count].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[count].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[count].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[count].office_location +'</p></td><td><p>&dollar; '+result[count].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[count].position_id +'">Apply now</button></td></tr>'
+                              }
+
+                         $('button[id^="applyToJob"]').click(function() {
+                                   localStorage.jobToApply = $(this).attr('id');
+                                    window.location.href="jobDescription.html";
+                                     }); 
+                         count++;
+                     }
+                 }
+
+                     }
+                 };
+
+            xhttp.open("GET", "/searchJobs?company="+companyList+"&location="+LocationList+"&minsal="+minSal+"&maxsal="+maxSal+"&text="+searchText, true);
+            xhttp.send();
+                 
+  
+                 
+                  
+           
+                 
+             }
+             
+             function chengeMaxSal() {
+                 console.log("gygh");
+//                 document.getElementById("#maxSal").setAttribute("min", "56 ");
+            $("#maxSal").attr({        // substitute your own
+           "min" : $("#minSal").val()         // values (or variables) here
+            });
+             }
+             
+            function newSearch() {
+                document.getElementById("searchJob").style.display = "block";
+                document.getElementById("searchResults").style.display = "none";
+            }
+             
+            
+
+        
+        </script>
+    </head>
+  <body onload="load();getUserData();getCompany();getLocations();">
+   <!--      <body onload="">-->
+        <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <!-- Body content -->
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <h3>Welcome <span id="welcome"></span> !</h3>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <div class="button navbar-right">
+                  <button class="navbar-btn nav-button wow bounceInRight login" id="login-button" onclick="loginRedirect()" data-wow-delay="0.8s" >Logout</button>
+              </div>
+              <ul class="main-nav nav navbar-nav navbar-right">
+                <li class="wow fadeInDown" data-wow-delay="0s"><a class="active" href="#">Home</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.2s"><a onClick="editProfile();" href="#">View/Edit Profile</a></li>
+                <li class="wow fadeInDown" data-wow-delay="0.1s"><a onClick="companyLogin();" href="#">Employer Login</a></li>
+                
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+                           <div class="container" id="searchJob" style="margin-top:100px;">
+                           <center><h2>Search for a Job!</h2></center>
+                           <br>
+                            <div class="row">
+                            <form  class="form-" id="myForm">
+                               <div class="col-md-12">
+                               <div class="row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="searchText" placeholder="Job Key Word">
+                                </div>
+                                   </div>
+                                <div class="row">
+                                <div class="col-md-3">
+                                <div class="form-group" id="selectCompany">
+                                      <label>Select Company</label>
+                                      <div id="selectCompany">
+                                     
+                                        </div>
+                                </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Select Location</label>
+                                       <div id="locationSelect">
+                                     
+                                        </div>
+                                </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Select Salary Range</label>
+                                       <input type="number" class="form-control" id="minSal" onkeyup="chengeMaxSal()" placeholder="Minimum Salary">
+                                       <br>
+                                       <input type="number" class="form-control" id="maxSal" min="" placeholder="Maximum Salary">
+                                </div>
+                                    </div>
+                                   </div>
+                                </div>
+                                <input type="button" class="btn btn-primary btn-lg " value="Search" onclick="test()">
+                            </form>
+                        </div>
+                        </div>
+                   
+                     <div class="container" id="searchResults" style="display:none">
+                <div class="row page-title text-center wow bounce"  data-wow-delay="1s">
+                    <h5>Search Result</h5>
+                    <h2><span id="jobCount"></span> Available jobs for you</h2>
+                </div>
+                <div class="row jobs">
+                    <div class="col-md-12 pagination-container">
+                        <div id="jobPostingDiv" class="job-posts table-responsive" ></div>
+                            
+                      
+<div class="row graphics pagination-container" >
+                        <center>
+                            <div class="pagination">
+                            <ul id="pagination" class="pagination pagination-centered pagination-large">
+                            </ul>
+                            </div>
+                            </center>
+                            </div>
+                        <div class="more-jobs">
+                            <button onclick="newSearch();" class="btn btn-primary btn-lg "> <i class="fa fa-refresh"></i>Start New Search</button>
+                        </div>
+                    </div>
+                         </div>
+           </div>
+           
+          
+
+        
+       
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/wow.js"></script>
+        <script src="js/main.js"></script>
+        
+    </body>
+    
+</html>
