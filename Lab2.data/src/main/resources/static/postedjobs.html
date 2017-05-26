@@ -3,8 +3,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Job Board</title>
-        <meta name="description" content="company is a free job board template">
-        <meta name="author" content="Ohidul">
+        <meta name="description" content="Job Board">
+        <meta name="author" content="Anshul Agrawal">
         <meta name="keyword" content="html, css, bootstrap, job-board">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800' rel='stylesheet' type='text/css'>
@@ -38,7 +38,7 @@
          }
          function load() {  
          	 if(localStorage.getItem("companyId") == "" || localStorage.getItem("companyId") == null )
-             window.location.href="companyLogin.html";
+             window.location.href="company_login.html";
          	else{
          		
          	} 
@@ -90,32 +90,51 @@
                 	 }
                  } 
             	 
-             if(count%2 == 0){
-               document.getElementById("jobPosting").innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="1s"><td class="tbl-logo"><img height="72" width="72" src="'+result[i].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[i].position_title +'<br><span class="job-type">'+ skills +'</span></h4></td><td><p>'+result[i].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[i].office_location +'</p></td><td><p>&dollar; '+result[i].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[i].position_id +'">Update post</button></td></tr>'
+            	 if(count%2 == 0)
+            	 {
+                     document.getElementById("jobPosting").innerHTML += '<tr class="odd wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[i].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[i].position_title +'<br><span class="job-type">'+ skills +'</span></h4></td><td><p>'+result[i].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[i].office_location +'</p></td><td><p>&dollar; '+result[i].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[i].position_id +'">Update post</button>&nbsp <button class="btn btn-primary" id="cancelJob'+result[i].position_id +'">View All Applicants</button></td></tr>'
                  }
-                 else {
-                      document.getElementById("jobPosting").innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="1s"><td class="tbl-logo"><img height="72" width="72" src="'+result[i].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[i].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[i].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[i].office_location +'</p></td><td><p>&dollar; '+result[i].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[i].position_id +'">Update post</button></td></tr>'
+                 else 
+                 {
+                            document.getElementById("jobPosting").innerHTML += '<tr class="even wow fadeInUp" data-wow-delay="0.2s"><td class="tbl-logo"><img height="72" width="72" src="'+result[i].companyProfile.logo_url +'" alt=""></td><td class="tbl-title"><h4>' +result[i].position_title +'<br><span class="job-type">'+skills +'</span></h4></td><td><p>'+result[i].companyProfile.company_name +'</p></td><td><p><i class="icon-location"></i>'+result[i].office_location +'</p></td><td><p>&dollar; '+result[i].salary +'</p></td><td class="tbl-apply"><button class="btn btn-primary" id="applyToJob'+result[i].position_id +'">Update post</button>&nbsp <button class="btn btn-primary" id="cancelJob'+result[i].position_id +'">View All Applicants</button></td></tr>'
                  }
-                 
                 
                  count++;
 
                   $('button[id^="applyToJob"]').click(function() {
-                      localStorage.jobToApply = $(this).attr('id');
-                       window.location.href="jobDescription.html";
+                      localStorage.editPosition = $(this).attr('id');
+                       window.location.href="editPosition.html";
                         }); 
+                  
+                  $('button[id^="cancelJob"]').click(function() {
+                	  localStorage.editPosition = $(this).attr('id');
+                	  window.location.href="viewApplicants.html";
+                	/*   var positionId=($(this).attr('id')).split("cancelJob")[1];
+                	 
+                      alert(positionId);
+ 
+                      var result;
+                      var xhttp = new XMLHttpRequest(); 
+
+                      xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        	test();
+                        }
+                      };
+                      xhttp.open("DELETE", "/deleteCompanyPosition/"+positionId, true);
+                      xhttp.send(); */
+                       
+                       
+                        });
+                  
              }
                   }
             };
 
         xhttp.open("GET", "/getPositionsByCompanyId/"+localStorage.getItem("companyId"), true);
         xhttp.send();       
-              console.log(companyList);
-              console.log(LocationList);
-              console.log(searchText);
-              console.log(minSal);
-              console.log(maxSal);
-             
+           
+        
          }
         
         </script>
@@ -135,7 +154,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <h3>Welcome <span id="welcome"></span> </h3>
+              <h3>Welcome <span id="welcome"></span> !</h3>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -166,20 +185,11 @@
         
                             </table>
                         </div>
-                        <div class="more-jobs">
-                            <button onclick="newSearch();"> <i class="fa fa-refresh"></i>Start New Search</button>
-                        </div>
+                     
                     </div>
                          </div>
            </div>
-        <div class="footer-area">
-            <div class="container">
-                <div class="row footer">
-                </div>
-                <div class="row footer-copy">
-                </div>
-            </div>
-        </div>
+    
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
