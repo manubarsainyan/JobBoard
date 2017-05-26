@@ -1,9 +1,9 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="description" content="Patient Monitoring System">
+    <meta name="description" content="Post a Job">
     <meta name="keywords" content="CMPE275, SJSU, Job Board, term Project">
-    <meta name="author" content="HackJS">
+    <meta name="author" content="Anshul Agrawal">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="author" href="https://www.linkedin.com/in/anshul-agrawal/">
     <title>Home Page</title> 
@@ -38,7 +38,7 @@
               console.log("test");
           }
         };
-        xhttp.open("POST", "/createCompanyPosition?position_title="+title+"&position_description="+description+"&position_responsibility="+responsibility+"&office_location="+location+"&salary="+salary+"&company_id="+localStorage.companyId+"&skills="+skills, true);
+        xhttp.open("POST", "/createCompanyPosition?position_title="+title+"&position_description="+description+"&position_responsibility="+responsibility+"&office_location="+location+"&salary="+salary+"&company_id="+localStorage.companyId+"&skills="+skills+"&status="+"Open", true);
         xhttp.send();
   }
     
